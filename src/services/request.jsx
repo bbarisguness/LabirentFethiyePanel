@@ -1,4 +1,5 @@
 const user = JSON.parse(localStorage.getItem("user"));
+const serviceToken=localStorage.getItem("serviceToken");
 
 function objectToFormData(data) {
   let form_data = new FormData();
@@ -32,7 +33,7 @@ function request(
       options = {
         method,
         headers: {
-          Authorization: `Bearer ${token === false ? user.token : token}`,
+          Authorization: `Bearer ${token === false ? serviceToken : serviceToken}`,
           Accept: "application/form-data",
         },
       };
@@ -70,6 +71,8 @@ function request(
   });
 }
 
-export const post = (url, data, token = false, formData = false) =>
-  request(url, token, data, "POST", formData);
+export const post = (url, data, token = false, formData = false) => request(url, token, data, "POST", formData);
 export const get = (url, token = false) => request(url, token);
+export const remove = (url) => request(url, true, false, "DELETE");
+
+

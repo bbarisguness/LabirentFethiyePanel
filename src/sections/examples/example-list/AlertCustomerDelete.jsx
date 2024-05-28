@@ -15,12 +15,18 @@ import { openSnackbar } from 'api/snackbar';
 
 // assets
 import { Trash } from 'iconsax-react';
+import { VillaRemove } from 'services/villaServices';
 
 // ==============================|| CUSTOMER - DELETE ||============================== //
 
-export default function AlertCustomerDelete({ id, title, open, handleClose }) {
+export default function AlertCustomerDelete({ id, title, open, handleClose, setLoading, setIsDeleted }) {
   const deletehandler = async () => {
-    await deleteCustomer(id).then(() => {
+    setLoading(true)
+
+    await VillaRemove(id).then((res) => {
+      console.log(res);
+      setIsDeleted(true)
+      // setLoading(false)
       openSnackbar({
         open: true,
         message: 'Customer deleted successfully',
@@ -33,6 +39,21 @@ export default function AlertCustomerDelete({ id, title, open, handleClose }) {
       });
       handleClose();
     });
+
+
+    // await deleteCustomer(id).then(() => {
+    //   openSnackbar({
+    //     open: true,
+    //     message: 'Customer deleted successfully',
+    //     anchorOrigin: { vertical: 'top', horizontal: 'right' },
+    //     variant: 'alert',
+
+    //     alert: {
+    //       color: 'success'
+    //     }
+    //   });
+    //   handleClose();
+    // });
   };
 
   return (
