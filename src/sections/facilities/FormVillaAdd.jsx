@@ -12,7 +12,6 @@ import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
 
 // project imports
-import AlertCustomerDelete from './AlertCustomerDelete';
 import Avatar from 'components/@extended/Avatar';
 import IconButton from 'components/@extended/IconButton';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
@@ -513,7 +512,6 @@ export default function FormVillaAdd({ customer, closeModal }) {
           </Form>
         </LocalizationProvider>
       </FormikProvider>
-      {customer && <AlertCustomerDelete id={customer.id} title={customer.name} open={openAlert} handleClose={handleAlertClose} />}
     </>
   );
 }

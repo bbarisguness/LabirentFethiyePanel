@@ -7,21 +7,20 @@ import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 
 // project imports
+import FormCustomerAdd from './FormCustomerAdd';
 import MainCard from 'components/MainCard';
 import SimpleBar from 'components/third-party/SimpleBar';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
-import FormVillaAdd from './FormVillaAdd';
+import { useGetCustomer } from 'api/customer';
 
 // ==============================|| CUSTOMER ADD / EDIT ||============================== //
 
-export default function VillaModal({ open, modalToggler }) {
-
+export default function CustomerModal({ open, modalToggler }) {
+  const { customersLoading: loading } = useGetCustomer();
 
   const closeModal = () => modalToggler(false);
 
-  const villaForm = useMemo(
-    <FormVillaAdd closeModal={closeModal} />
-  );
+
 
   return (
     <>
@@ -46,7 +45,7 @@ export default function VillaModal({ open, modalToggler }) {
                   </Stack>
                 </Box>
               ) : (
-                villaForm
+                <FormCustomerAdd closeModal={closeModal} />
               )}
             </SimpleBar>
           </MainCard>
@@ -56,4 +55,4 @@ export default function VillaModal({ open, modalToggler }) {
   );
 }
 
-VillaModal.propTypes = { open: PropTypes.bool, modalToggler: PropTypes.func, customer: PropTypes.any };
+CustomerModal.propTypes = { open: PropTypes.bool, modalToggler: PropTypes.func };

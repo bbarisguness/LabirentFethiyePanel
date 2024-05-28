@@ -39,7 +39,7 @@ import ScrollX from 'components/ScrollX';
 import Avatar from 'components/@extended/Avatar';
 import IconButton from 'components/@extended/IconButton';
 
-import CustomerModal from 'sections/examples/example-list/CustomerModal';
+//import CustomerModal from 'sections/examples/example-list/CustomerModal';
 import AlertCustomerDelete from 'sections/examples/example-list/AlertCustomerDelete';
 import CustomerView from 'sections/examples/example-list/CustomerView';
 import EmptyReactTable from 'pages/global-pages/empty-data';
@@ -65,6 +65,8 @@ import { VillaServices } from 'services';
 import { display, height, width } from '@mui/system';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import Loader from 'components/Loader';
+import VillaModal from 'sections/facilities/VillaModal';
+import CustomerModal from 'sections/facilities/CustomerModal';
 
 // ==============================|| REACT TABLE - LIST ||============================== //
 const fallbackData = [];
@@ -199,6 +201,7 @@ export default function VillasList() {
     const [globalFilter, setGlobalFilter] = useState('');
 
     const [customerModal, setCustomerModal] = useState(false);
+    const [villaModal, setVillaModal] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [customerDeleteId, setCustomerDeleteId] = useState('');
     const [isDeleted, setIsDeleted] = useState(false)
@@ -349,7 +352,7 @@ export default function VillasList() {
                     data,
                     columns,
                     modalToggler: () => {
-                        setCustomerModal(true);
+                        setVillaModal(true);
                         setSelectedCustomer(null);
                     },
                     pagination,
@@ -361,9 +364,12 @@ export default function VillasList() {
                 }}
             />
             <AlertCustomerDelete setIsDeleted={setIsDeleted} setLoading={setLoading} id={Number(customerDeleteId)} title={customerDeleteId} open={open} handleClose={handleClose} />
-            <CustomerModal open={customerModal} modalToggler={setCustomerModal} customer={selectedCustomer} />
+            {/* <CustomerModal open={customerModal} modalToggler={setCustomerModal} customer={selectedCustomer} /> */}
+
+            {/* <VillaModal open={villaModal} modalToggler={setVillaModal}/> */}
+            <CustomerModal open={villaModal} modalToggler={setVillaModal} />
         </>
     );
 }
 
-ReactTable.propTypes = { data: PropTypes.array, columns: PropTypes.array, modalToggler: PropTypes.func, pagination: PropTypes.object, setPagination: PropTypes.func, setSorting: PropTypes.func, sorting: PropTypes.object, globalFilter: PropTypes.string, setGlobalFilter: PropTypes.func };
+ReactTable.propTypes = { data: PropTypes.any, columns: PropTypes.array, modalToggler: PropTypes.func, pagination: PropTypes.object, setPagination: PropTypes.func, setSorting: PropTypes.func, sorting: PropTypes.any, globalFilter: PropTypes.string, setGlobalFilter: PropTypes.func };
