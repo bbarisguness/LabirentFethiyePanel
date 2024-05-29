@@ -96,7 +96,7 @@ const allStatus = [
 
 // ==============================|| CUSTOMER ADD / EDIT - FORM ||============================== //
 
-export default function FormCustomerAdd({ closeModal }) {
+export default function VillaAdd({ closeModal }) {
   const theme = useTheme();
 
   const [loading, setLoading] = useState(true);
@@ -406,4 +406,4 @@ export default function FormCustomerAdd({ closeModal }) {
   );
 }
 
-FormCustomerAdd.propTypes = { closeModal: PropTypes.func };
+VillaAdd.propTypes = { closeModal: PropTypes.func };

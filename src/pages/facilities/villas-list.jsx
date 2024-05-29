@@ -67,10 +67,16 @@ import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import Loader from 'components/Loader';
 import VillaModal from 'sections/facilities/VillaModal';
 import CustomerModal from 'sections/facilities/CustomerModal';
+import { Navigate } from 'react-router';
+import { useNavigate  } from 'react-router-dom';
 
 // ==============================|| REACT TABLE - LIST ||============================== //
 const fallbackData = [];
 function ReactTable({ data, columns, modalToggler, pagination, setPagination, setSorting, sorting, globalFilter, setGlobalFilter }) {
+
+    const navigate = useNavigate();
+
+
     const table = useReactTable({
         data: data?.data || fallbackData,
         columns,
@@ -109,7 +115,7 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                 />
 
                 <Stack direction="row" alignItems="center" spacing={2}>
-                    <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
+                    <Button variant="contained" startIcon={<Add />} onClick={()=>{navigate("/facilities/villas-add");}} size="large">
                         Villa Ekle
                     </Button>
                 </Stack>

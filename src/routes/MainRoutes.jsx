@@ -9,6 +9,7 @@ import RoleList from 'pages/settings/user-settings/role-list';
 import Default from 'pages/default';
 import VillasList from 'pages/facilities/villas-list';
 import ApartsList from 'pages/facilities/apars-list';
+import VillaAdd from 'pages/facilities/villa-add';
 
 const ErrorPage = Loadable(lazy(() => import('pages/error-pages/404')));
 
@@ -31,6 +32,10 @@ const MainRoutes = {
             {
               path: 'villas-list',
               element: <VillasList />
+            },
+            {
+              path: 'villas-add',
+              element: <VillaAdd />
             },
             {
               path: 'aparts-list',
