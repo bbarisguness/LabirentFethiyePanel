@@ -61,12 +61,13 @@ import { ImagePath, getImageUrl } from 'utils/getImageUrl';
 import { Add, Edit, Eye, Trash } from 'iconsax-react';
 
 // custom
-import { VillaServices } from 'services';
+import { ReservationServices, VillaServices } from 'services';
 import { display, height, width } from '@mui/system';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import Loader from 'components/Loader';
-import { Navigate } from 'react-router';
-import { useNavigate  } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+import ReservationModal from 'sections/reservations/ReservationModal';
 
 // ==============================|| REACT TABLE - LIST ||============================== //
 const fallbackData = [];
@@ -113,8 +114,8 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                 />
 
                 <Stack direction="row" alignItems="center" spacing={2}>
-                    <Button variant="contained" startIcon={<Add />} onClick={()=>{navigate("/facilities/villas-add");}} size="large">
-                        Villa Ekle
+                    <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
+                        Rezervasyon Ekle
                     </Button>
                 </Stack>
             </Stack>
@@ -142,7 +143,7 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                                                         header.column.columnDef.meta === undefined && {
                                                         className: 'cursor-pointer prevent-select'
                                                     })}
-                                                    style={{cursor:'pointer'}}
+                                                    style={{ cursor: 'pointer' }}
                                                 >
                                                     {header.isPlaceholder ? null : (
                                                         <Stack direction="row" spacing={1} alignItems="center">
@@ -162,9 +163,8 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                                         key={row.id}
                                         onClick={() => {
                                             console.log("Kayıt Id => ", row.original.id);
-                                            navigate(`/facilities/villas-show/${row.original.id}/summary`)
                                         }}
-                                        style={{cursor:'pointer'}}
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id} {...cell.column.columnDef.meta}>
@@ -197,14 +197,16 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
 }
 // ==============================|| CUSTOMER LIST ||============================== //
 
-export default function VillasList() {
+export default function VillaReservationSection() {
     const theme = useTheme();
+    const params = useParams();
 
     const [open, setOpen] = useState(false);
 
     const [sorting, setSorting] = useState([{ id: 'id', desc: true }]);
     const [globalFilter, setGlobalFilter] = useState('');
 
+    const [reservationModal, setReservationModal] = useState(false);
     const [customerModal, setCustomerModal] = useState(false);
     const [villaModal, setVillaModal] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -222,7 +224,7 @@ export default function VillasList() {
 
     useEffect(() => {
         setLoading(true)
-        VillaServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
+        ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id).then((res) => { setData(res); setLoading(false); });
     }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter]);
 
     useEffect(() => {
@@ -233,9 +235,12 @@ export default function VillasList() {
         if (isDeleted) {
             setIsDeleted(false)
             setLoading(true)
-            VillaServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
+            //ReservationServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
+            ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id)
         }
     }, [isDeleted])
+
+    
 
 
     const handleClose = () => {
@@ -249,97 +254,54 @@ export default function VillasList() {
                 cell: ({ row }) => { return row.original.id }
             },
             {
-                header: 'Villa Adı',
-                accessorKey: 'attributes.name',
-                cell: ({ row, getValue }) => (
-                    <Stack direction="row" spacing={1.5} alignItems="center">
-                        <Avatar
-                            alt="Avatar"
-                            size="sm"
-                            src={getImageUrl(`avatar-${!row.original.avatar ? 1 : row.original.avatar}.png`, ImagePath.USERS)}
-                        />
-                        <Stack spacing={0}>
-                            <Typography variant="subtitle1">{getValue()}</Typography>
-                        </Stack>
-                    </Stack>
-                )
-            },
-            {
-                header: 'Bölge',
-                cell: ({ row }) => { return row.original.attributes.region }
-            },
-            {
-                header: 'Kapasite',
-                cell: ({ row }) => { return row.original.attributes.person }
-            },
-            {
-                header: 'Oda Sayısı',
-                cell: ({ row }) => { return row.original.attributes.room }
-            },
-            {
-                header: 'Online Rez.',
-                accessorKey: 'attributes.onlineReservation',
-                cell: (cell) => {
-                    if (cell.getValue()) return <Chip color="success" label="Aktif" size="small" variant="light" />;
-                    else return <Chip color="error" label="Pasif" size="small" variant="light" />;
-                    // switch (cell.getValue()) {
-                    //     case 3:
-                    //         return <Chip color="error" label="Rejected" size="small" variant="light" />;
-                    //     case 1:
-                    //         return <Chip color="success" label="Verified" size="small" variant="light" />;
-                    //     case 2:
-                    //     default:
-                    //         return <Chip color="info" label="Pending" size="small" variant="light" />;
-                    // }
-                }
-            },
-            {
-                header: 'Actions',
-                meta: {
-                    className: 'cell-center'
-                },
-                disableSortBy: true,
+                header: 'Misafir',
                 cell: ({ row }) => {
-                    const collapseIcon =
-                        row.getCanExpand() && row.getIsExpanded() ? (
-                            <Add style={{ color: theme.palette.error.main, transform: 'rotate(45deg)' }} />
-                        ) : (
-                            <Eye />
-                        );
                     return (
-                        <Stack direction="row" spacing={0}>
-                            <Tooltip title="View">
-                                <IconButton color="secondary" onClick={row.getToggleExpandedHandler()}>
-                                    {collapseIcon}
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Edit">
-                                <IconButton
-                                    color="primary"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedCustomer(row.original);
-                                        setCustomerModal(true);
-                                    }}
-                                >
-                                    <Edit />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                                <IconButton
-                                    color="error"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleClose();
-                                        setCustomerDeleteId(Number(row.original.id));
-                                    }}
-                                >
-                                    <Trash />
-                                </IconButton>
-                            </Tooltip>
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Avatar
+                                alt="Avatar"
+                                size="sm"
+                                src={getImageUrl(`avatar-${!row.original.avatar ? 1 : row.original.avatar}.png`, ImagePath.USERS)}
+                            />
+                            <Stack spacing={0}>
+                                <Typography variant="subtitle1">{row.original.attributes.reservation_infos.data[0].attributes.name + ' ' + row.original.attributes.reservation_infos.data[0].attributes.surname}</Typography>
+                            </Stack>
                         </Stack>
-                    );
+                    )
                 }
+            },
+            {
+                header: 'reservationStatus',
+                accessorKey: 'attributes.reservationStatus',
+                cell: (cell) => {
+                    switch (cell.getValue()) {
+                        case "100":
+                            return <Chip color="warning" label="Onay Bekliyor" size="small" variant="light" />;
+                        case "110":
+                            return <Chip color="error" label="İptal Edildi" size="small" variant="light" />;
+                        case "120":
+                            return <Chip color="success" label="Onaylandı" size="small" variant="light" />;
+                        case "130":
+                            return <Chip color="info" label="Konaklama Başladı" size="small" variant="light" />;
+                        case "140":
+                            return <Chip color="primary" label="Konaklama Bitti" size="small" variant="light" />;
+                        default:
+                            return <Chip color="info" label="Pending" size="small" variant="light" />;
+                    }
+                }
+            },
+
+            {
+                header: 'Giriş Tarihi',
+                cell: ({ row }) => { return row.original.attributes.checkIn }
+            },
+            {
+                header: 'Çıkış Tarihi',
+                cell: ({ row }) => { return row.original.attributes.checkOut }
+            },
+            {
+                header: 'Tutar',
+                cell: ({ row }) => { return (row.original.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " TL") }
             }
         ], // eslint-disable-next-line
         [theme]
@@ -357,8 +319,7 @@ export default function VillasList() {
                     data,
                     columns,
                     modalToggler: () => {
-                        setVillaModal(true);
-                        setSelectedCustomer(null);
+                        setReservationModal(true);
                     },
                     pagination,
                     setPagination,
@@ -368,8 +329,8 @@ export default function VillasList() {
                     setGlobalFilter
                 }}
             />
-            <AlertCustomerDelete setIsDeleted={setIsDeleted} setLoading={setLoading} id={Number(customerDeleteId)} title={customerDeleteId} open={open} handleClose={handleClose} />
-            {/* <CustomerModal open={customerModal} modalToggler={setCustomerModal} customer={selectedCustomer} /> */}
+
+            <ReservationModal open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
 
             {/* <VillaModal open={villaModal} modalToggler={setVillaModal}/> */}
             {/* <CustomerModal open={villaModal} modalToggler={setVillaModal} /> */}

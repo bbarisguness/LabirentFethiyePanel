@@ -14,6 +14,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import { openSnackbar } from 'api/snackbar';
 import ReactQuill from 'react-quill';
+import { useNavigate } from 'react-router';
 
 // assets
 import { CloseCircle } from 'iconsax-react';
@@ -47,7 +48,7 @@ const getInitialValues = () => {
 export default function FormVillaAdd({ closeModal }) {
 
 
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
 
@@ -78,7 +79,9 @@ export default function FormVillaAdd({ closeModal }) {
     validationSchema: VillaSchema,
     enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(values);
+      
+      
+
       try {
 
         values.slug = values.name
@@ -110,7 +113,7 @@ export default function FormVillaAdd({ closeModal }) {
             }
           });
           setSubmitting(false);
-          closeModal();
+          navigate('/facilities/villa-show');
         });
       } catch (error) {
         // console.error(error);
@@ -143,6 +146,7 @@ export default function FormVillaAdd({ closeModal }) {
               <Grid item xs={12} md={12}>
                 <Grid container spacing={3}>
                   <Grid item xs={6}>
+                  <Stack spacing={1}>
                     <InputLabel htmlFor="villa-name">Villa Adı</InputLabel>
                     <TextField
                       fullWidth
@@ -152,8 +156,10 @@ export default function FormVillaAdd({ closeModal }) {
                       error={Boolean(touched.name && errors.name)}
                       helperText={touched.name && errors.name}
                     />
+                    </Stack>
                   </Grid>
                   <Grid item xs={6}>
+                  <Stack spacing={1}>
                     <InputLabel htmlFor="villa-region">Bölge</InputLabel>
                     <TextField
                       fullWidth
@@ -163,6 +169,7 @@ export default function FormVillaAdd({ closeModal }) {
                       error={Boolean(touched.region && errors.region)}
                       helperText={touched.region && errors.region}
                     />
+                    </Stack>
                   </Grid>
 
                   <Grid item xs={12}>

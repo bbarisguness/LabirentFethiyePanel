@@ -7,21 +7,25 @@ import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 
 // project imports
-import FormCustomerAdd from './FormCustomerAdd';
 import MainCard from 'components/MainCard';
 import SimpleBar from 'components/third-party/SimpleBar';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import { useGetCustomer } from 'api/customer';
+import FormReservationAdd from './FormReservationAdd';
 
 // ==============================|| CUSTOMER ADD / EDIT ||============================== //
 
-export default function CustomerModal({ open, modalToggler }) {
+export default function ReservationModal({ open, modalToggler, villaId }) {
   const { customersLoading: loading } = useGetCustomer();
 
   const closeModal = () => modalToggler(false);
 
-
-
+  const customerForm = useMemo(
+    () => !loading && <FormReservationAdd villaId={villaId} closeModal={closeModal} />,
+    // eslint-disable-next-line
+    [loading]
+  );
+  
   return (
     <>
       {open && (
@@ -45,7 +49,7 @@ export default function CustomerModal({ open, modalToggler }) {
                   </Stack>
                 </Box>
               ) : (
-                <FormCustomerAdd closeModal={closeModal} />
+                customerForm
               )}
             </SimpleBar>
           </MainCard>
@@ -55,4 +59,4 @@ export default function CustomerModal({ open, modalToggler }) {
   );
 }
 
-CustomerModal.propTypes = { open: PropTypes.bool, modalToggler: PropTypes.func };
+

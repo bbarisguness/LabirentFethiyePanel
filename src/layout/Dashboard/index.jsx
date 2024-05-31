@@ -22,6 +22,8 @@ import useConfig from 'hooks/useConfig';
 import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
 
 // ==============================|| MAIN LAYOUT ||============================== //
+import navigation from 'menu-items';
+
 
 export default function MainLayout() {
   const theme = useTheme();
@@ -63,7 +65,7 @@ export default function MainLayout() {
               flexDirection: 'column'
             }}
           >
-            <Breadcrumbs />
+            {/* <Breadcrumbs /> */}
             <Outlet />
             <Footer />
           </Container>
