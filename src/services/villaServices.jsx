@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { get, post, remove } from './request'
+import { get, post, put, remove } from './request'
 import * as qs from 'qs'
 
 const Villas = (page, size, sort = true, fieldName = 'id', filter) => get(`/api/villas?sort=${fieldName}:${sort ? 'desc' : 'asc'}&filters[name][$containsi]=${filter}&pagination[page]=${page}&pagination[pageSize]=${size}`)
 const GetVillaName = (id) => get(`/api/villas/${id}?fields=name`)
-const GetVilla = (id) => get(`/api/villas/${id}?populate[photos][populate][0]=photo&populate[reservations][populate][reservation_infos][filters][owner]=true`)
+const GetVilla = (id) => get(`/api/villas/${id}?populate[photos][sort]=line:asc&populate[photos][populate][0]=photo&populate[reservations][populate][reservation_infos][filters][owner]=true`)
 const VillaAdd = (payload) => post('/api/villas', payload, true)
 const VillaRemove = (id) => remove('/api/villas/' + id)
 
@@ -61,7 +61,7 @@ const VillaIsAvailible = (villaId, date1, date2) => {
     return get(`/api/reservations?${query}`);
 }
 
-const VillaGetPriceForReservation = (villaId,date1,date2) => {
+const VillaGetPriceForReservation = (villaId, date1, date2) => {
     const query = qs.stringify({
         sort: ['checkIn:asc'],
         fields: ['checkIn', 'checkOut', 'price'],
@@ -107,6 +107,20 @@ const VillaGetPriceForReservation = (villaId,date1,date2) => {
     return get(`/api/price-dates?${query}`);
 }
 
+const GetVillaFull = (id) => {
+    const query = qs.stringify({
+        populate: ['distance_rulers', 'price_tables'],
+        // populate: {
+        //     price_tables: {
+        //         fields: ['id', 'name', 'value']
+        //     }
+        // }        
+    });
+    return get(`/api/villas/${id}?${query}`);
+}
 
 
-export { Villas, GetVillaName, GetVilla, VillaAdd, VillaRemove, VillaIsAvailible, VillaGetPriceForReservation }
+const VillaChangeState = (id, payload) => put(`/api/villas/${id}`, payload, true);
+
+
+export { Villas, GetVillaName, GetVilla, VillaAdd, VillaRemove, VillaIsAvailible, VillaGetPriceForReservation, GetVillaFull, VillaChangeState }

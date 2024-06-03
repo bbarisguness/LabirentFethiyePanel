@@ -289,7 +289,7 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                                             <DatePicker
                                                 id="checkIn"
                                                 value={date1}
-                                                onChange={(newValue) => setDate1(newValue)}
+                                                onChange={(newValue) => {setDate1(newValue); }}
                                                 slotProps={{ textField: { fullWidth: true } }} />
                                         </Stack>
                                     </Grid>
@@ -298,7 +298,9 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                                             <InputLabel htmlFor="checkOut">Çıkış Tarihi</InputLabel>
                                             <DatePicker
                                                 id="checkOut"
-                                                value={date2}
+                                                value={date2}                                                
+                                                minDate={date1}                                                
+                                                disabled={!date1}
                                                 onChange={(newValue) => setDate2(newValue)}
                                                 slotProps={{ textField: { fullWidth: true } }} />
                                         </Stack>

@@ -1,10 +1,9 @@
+/* eslint-disable prettier/prettier */
 // project-imports
-import MainCard from 'components/MainCard';
+import VillaGallerySection from 'sections/facilities/tabs/villa-gallery';
 
 export default function VillaGallery() {
   return (
-    <MainCard title="Villa Gallery">
-      Gallery
-    </MainCard>
+    <VillaGallerySection />
   );
 }

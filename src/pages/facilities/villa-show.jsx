@@ -26,16 +26,24 @@ export default function VillaShow() {
     let selectedTab = 0;
     let breadcrumbTitle = '';
     let breadcrumbHeading = '';
+
     if (pathname.indexOf('summary') != -1) {
         selectedTab = 0;
     } else if (pathname.indexOf('reservation') != -1) {
         selectedTab = 1;
-    } else if (pathname.indexOf('price') != -1) {
+    }
+    else if (pathname.indexOf('available-date') != -1) {
         selectedTab = 2;
-    } else if (pathname.indexOf('gallery') != -1) {
+    }
+     else if (pathname.indexOf('price') != -1) {
         selectedTab = 3;
-    } else if (pathname.indexOf('file') != -1) {
+    } else if (pathname.indexOf('content') != -1) {
         selectedTab = 4;
+    } else if (pathname.indexOf('gallery') != -1) {
+        selectedTab = 5;
+    }
+    else if (pathname.indexOf('file') != -1) {
+        selectedTab = 6;
     }
     // switch (pathname) {
     //     case '/apps/profiles/account/personal':
@@ -81,10 +89,25 @@ export default function VillaShow() {
         { title: 'Villa Yönetimi', to: '/facilities/villas-list' }
     ];
     if (selectedTab === 0) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/${params.id}/summary` }, { title: 'Özet Bilgiler' }];
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/summary/${params.id}` }, { title: 'Özet Bilgiler' }];
     }
     else if (selectedTab === 1) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/${params.id}/summary` }, { title: 'Rezervasyonlar' }];
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/reservation/${params.id}` }, { title: 'Rezervasyonlar' }];
+    }
+    else if (selectedTab === 2) {
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/available-date/${params.id}` }, { title: 'Müsait Tarihler' }];
+    }
+    else if (selectedTab === 3) {
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/price/${params.id}` }, { title: 'Fiyatlar' }];
+    }
+    else if (selectedTab === 4) {
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/content/${params.id}` }, { title: 'İçerik Yönetimi' }];
+    }
+    else if (selectedTab === 5) {
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/gallery/${params.id}` }, { title: 'Galeri' }];
+    }
+    else if (selectedTab === 6) {
+        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/file/${params.id}` }, { title: 'Dosyalar' }];
     }
 
     useEffect(() => {
@@ -108,37 +131,37 @@ export default function VillaShow() {
             <MainCard border={false}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
                     <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab">
-                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/villas-show/${params.id}/summary`} icon={<Profile />} iconPosition="start" />
+                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/villas-show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />
                         <Tab
                             label="Rezervasyonlar"
                             component={Link}
-                            to={`/facilities/villas-show/${params.id}/reservation`}
+                            to={`/facilities/villas-show/reservation/${params.id}`}
                             icon={<Calendar />}
                             iconPosition="start"
                         />
                         <Tab
                             label="Müsait Tarihler"
                             component={Link}
-                            to={`/facilities/villas-show/${params.id}/available-date`}
+                            to={`/facilities/villas-show/available-date/${params.id}`}
                             icon={<ArchiveTick />}
                             iconPosition="start"
                         />
                         <Tab
                             label="Fiyatlar"
                             component={Link}
-                            to={`/facilities/villas-show/${params.id}/price`}
+                            to={`/facilities/villas-show/price/${params.id}`}
                             icon={<DollarCircle />}
                             iconPosition="start"
                         />
                         <Tab
                             label="İçerik Yönetimi"
                             component={Link}
-                            to={`/facilities/villas-show/${params.id}/content`}
+                            to={`/facilities/villas-show/content/${params.id}`}
                             icon={<ClipboardText />}
                             iconPosition="start"
                         />
-                        <Tab label="Galeri" component={Link} to={`/facilities/villas-show/${params.id}/gallery`} icon={<Image />} iconPosition="start" />
-                        <Tab label="Dosyalar" component={Link} to={`/facilities/villas-show/${params.id}/file`} icon={<Folder />} iconPosition="start" />
+                        <Tab label="Galeri" component={Link} to={`/facilities/villas-show/gallery/${params.id}`} icon={<Image />} iconPosition="start" />
+                        <Tab label="Dosyalar" component={Link} to={`/facilities/villas-show/file/${params.id}`} icon={<Folder />} iconPosition="start" />
                     </Tabs>
                 </Box>
                 <Box sx={{ mt: 2.5 }}>

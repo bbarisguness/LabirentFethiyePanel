@@ -1,85 +1,52 @@
-import PropTypes from 'prop-types';
+/* eslint-disable prettier/prettier */
 import { useMemo, useState, Fragment, useEffect } from 'react';
 
 // material-ui
-import { alpha, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { Chip, Divider, Stack, Button, Table, TableCell, TableBody, TableHead, TableRow, TableContainer, Tooltip, Typography, Box } from '@mui/material';
 
 // third-party
-import { PatternFormat } from 'react-number-format';
-import {
-    flexRender,
-    getCoreRowModel,
-    getSortedRowModel,
-    getPaginationRowModel,
-    getFilteredRowModel,
-    useReactTable
-} from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 
 // project-import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import Avatar from 'components/@extended/Avatar';
 import IconButton from 'components/@extended/IconButton';
-
-import CustomerModal from 'sections/examples/example-list/CustomerModal';
-import AlertCustomerDelete from 'sections/examples/example-list/AlertCustomerDelete';
-import CustomerView from 'sections/examples/example-list/CustomerView';
-import EmptyReactTable from 'pages/global-pages/empty-data';
-
-import {
-    CSVExport,
-    DebouncedInput,
-    HeaderSort,
-    IndeterminateCheckbox,
-    RowSelection,
-    SelectColumnSorting,
-    TablePagination
-} from 'components/third-party/react-table';
-
-import { useGetCustomer } from 'api/customer';
+import { DebouncedInput, HeaderSort, TablePagination } from 'components/third-party/react-table';
 import { ImagePath, getImageUrl } from 'utils/getImageUrl';
+import VillaModalDelete from 'sections/facilities/VillaModalDelete';
+import Breadcrumbs from 'components/@extended/Breadcrumbs';
 
 // assets
 import { Add, Edit, Eye, Trash } from 'iconsax-react';
 
 // custom
 import { VillaServices } from 'services';
+import Loader from 'components/Loader';
+import { useNavigate } from 'react-router-dom';
 
 // ==============================|| REACT TABLE - LIST ||============================== //
+const fallbackData = [];
+function ReactTable({ data, columns, pagination, setPagination, setSorting, sorting, globalFilter, setGlobalFilter }) {
 
-function ReactTable({ data, columns, modalToggler }) {
-
-
-    const theme = useTheme();
-    const [sorting, setSorting] = useState([{ id: 'id', desc: false }]);
-    const [columnFilters, setColumnFilters] = useState([]);
-    const [rowSelection, setRowSelection] = useState({});
-    const [globalFilter, setGlobalFilter] = useState('');
+    const navigate = useNavigate();
 
     const table = useReactTable({
-        data,
+        data: data?.data || fallbackData,
         columns,
-        state: {
-            columnFilters,
-            sorting,
-            rowSelection,
-            globalFilter
-        },
-        enableRowSelection: true,
-        onSortingChange: setSorting,
-        onRowSelectionChange: setRowSelection,
-        onGlobalFilterChange: setGlobalFilter,
-        onColumnFiltersChange: setColumnFilters,
-        getRowCanExpand: () => true,
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        onPaginationChange: setPagination,
+        onSortingChange: setSorting,
+        pageCount: data?.meta?.pagination?.pageCount || 1,
+        autoResetPageIndex: false,
+        state: {
+            sorting,
+            globalFilter,
+            pagination
+        },
         debugTable: true
     });
-
-    const backColor = alpha(theme.palette.primary.lighter, 0.1);
 
     let headers = [];
     columns.map(
@@ -93,131 +60,148 @@ function ReactTable({ data, columns, modalToggler }) {
             })
     );
 
+    let breadcrumbLinks = [{ title: 'Villa Yönetimi' }, { title: 'Villa Listesi', to: `/facilities/villas-list` }];
+
     return (
-        <MainCard content={false}>
-            <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ padding: 3 }}>
-                <DebouncedInput
-                    value={globalFilter ?? ''}
-                    onFilterChange={(value) => setGlobalFilter(String(value))}
-                    placeholder={`Search ${data.length} records...`}
-                />
+        <>
+            <Breadcrumbs custom links={breadcrumbLinks} />
+            <MainCard content={false}>
+                <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ padding: 3 }}>
+                    <DebouncedInput
+                        value={globalFilter ?? ''}
+                        onFilterChange={(value) => setGlobalFilter(String(value))}
+                        placeholder={`Search ${data?.meta?.pagination?.total} records...`}
+                    />
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                        <Button variant="contained" startIcon={<Add />} onClick={() => { navigate("/facilities/villas-add"); }} size="large">
+                            Villa Ekle
+                        </Button>
+                    </Stack>
+                </Stack>
+                <ScrollX>
+                    <Stack>
 
-                {/* <Stack direction="row" alignItems="center" spacing={2}>                    
-                    <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
-                        Add Customer
-                    </Button>                    
-                </Stack> */}
-            </Stack>
-            <ScrollX>
-                <Stack>
-                    <RowSelection selected={Object.keys(rowSelection).length} />
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => {
-                                            if (header.column.columnDef.meta !== undefined && header.column.getCanSort()) {
-                                                Object.assign(header.column.columnDef.meta, {
-                                                    className: header.column.columnDef.meta.className + ' cursor-pointer prevent-select'
-                                                });
-                                            }
-
-                                            return (
-                                                <TableCell
-                                                    key={header.id}
-                                                    {...header.column.columnDef.meta}
-                                                    onClick={header.column.getToggleSortingHandler()}
-                                                    {...(header.column.getCanSort() &&
-                                                        header.column.columnDef.meta === undefined && {
-                                                        className: 'cursor-pointer prevent-select'
-                                                    })}
-                                                >
-                                                    {header.isPlaceholder ? null : (
-                                                        <Stack direction="row" spacing={1} alignItems="center">
-                                                            <Box>{flexRender(header.column.columnDef.header, header.getContext())}</Box>
-                                                            {header.column.getCanSort() && <HeaderSort column={header.column} />}
-                                                        </Stack>
-                                                    )}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                ))}
-                            </TableHead>
-                            <TableBody>
-                                {table.getRowModel().rows.map((row) => (
-                                    <Fragment key={row.id}>
-                                        <TableRow onClick={() => {
-                                            console.log(row.id);
-                                        }}>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    {table.getHeaderGroups().map((headerGroup) => (
+                                        <TableRow key={headerGroup.id}>
+                                            {headerGroup.headers.map((header) => {
+                                                if (header.column.columnDef.meta !== undefined && header.column.getCanSort()) {
+                                                    Object.assign(header.column.columnDef.meta, {
+                                                        className: header.column.columnDef.meta.className + ' cursor-pointer prevent-select'
+                                                    });
+                                                }
+                                                return (
+                                                    <TableCell
+                                                        key={header.id}
+                                                        {...header.column.columnDef.meta}
+                                                        onClick={header.column.getToggleSortingHandler()}
+                                                        {...(header.column.getCanSort() &&
+                                                            header.column.columnDef.meta === undefined && {
+                                                            className: 'cursor-pointer prevent-select'
+                                                        })}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
+                                                        {header.isPlaceholder ? null : (
+                                                            <Stack direction="row" spacing={1} alignItems="center">
+                                                                <Box>{flexRender(header.column.columnDef.header, header.getContext())}</Box>
+                                                                {header.column.getCanSort() && <HeaderSort column={header.column} />}
+                                                            </Stack>
+                                                        )}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                        </TableRow>
+                                    ))}
+                                </TableHead>
+                                <TableBody>
+                                    {table.getRowModel().rows.map((row) => (
+                                        <TableRow
+                                            key={row.id}
+                                            onClick={() => {
+                                                console.log("Kayıt Id => ", row.original.id);
+                                                navigate(`/facilities/villas-show/${row.original.id}/summary`)
+                                            }}
+                                            style={{ cursor: 'pointer' }}
+                                        >
                                             {row.getVisibleCells().map((cell) => (
                                                 <TableCell key={cell.id} {...cell.column.columnDef.meta}>
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
                                         </TableRow>
-                                        {row.getIsExpanded() && (
-                                            <TableRow sx={{ bgcolor: backColor, '&:hover': { bgcolor: `${backColor} !important` }, overflow: 'hidden' }}>
-                                                <TableCell colSpan={row.getVisibleCells().length} sx={{ p: 2.5, overflow: 'hidden' }}>
-                                                    <CustomerView data={row.original} />
-                                                </TableCell>
-                                            </TableRow>
-                                        )}
-                                    </Fragment>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <>
-                        <Divider />
-                        <Box sx={{ p: 2 }}>
-                            <TablePagination
-                                {...{
-                                    setPageSize: table.setPageSize,
-                                    setPageIndex: table.setPageIndex,
-                                    getState: table.getState,
-                                    getPageCount: table.getPageCount
-                                }}
-                            />
-                        </Box>
-                    </>
-                </Stack>
-            </ScrollX>
-        </MainCard>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <>
+                            <Divider />
+                            <Box sx={{ p: 2 }}>
+                                <TablePagination
+                                    {...{
+                                        setPageSize: table.setPageSize,
+                                        setPageIndex: table.setPageIndex,
+                                        getState: table.getState,
+                                        getPageCount: table.getPageCount,
+                                        initialPageSize: pagination.pageSize
+                                    }}
+                                />
+                            </Box>
+                        </>
+                    </Stack>
+                </ScrollX>
+            </MainCard>
+        </>
     );
 }
 // ==============================|| CUSTOMER LIST ||============================== //
 
 export default function ApartsList() {
     const theme = useTheme();
-    const [lists, setLists] = useState([])
+
+    const [sorting, setSorting] = useState([{ id: 'id', desc: true }]);
+    const [globalFilter, setGlobalFilter] = useState('');
+
+    const [customerDeleteId, setCustomerDeleteId] = useState('');
+    const [isDeleted, setIsDeleted] = useState(false)
+    const [villaModalDelete, setVillaModalDelete] = useState(false);
+
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10
+    });
+
+    const [data, setData] = useState(() => []);
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        VillaServices.Villas().then(res => setLists(res.data))
+        setLoading(true)
+        VillaServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
+    }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter]);
 
-    }, [])
-    //console.log('data : ', lists);
+    useEffect(() => {
+        setPagination({ ...pagination, pageIndex: 0 })
+    }, [globalFilter])
 
-    const [open, setOpen] = useState(false);
-
-    const [customerModal, setCustomerModal] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
-    const [customerDeleteId, setCustomerDeleteId] = useState('');
+    useEffect(() => {
+        if (isDeleted) {
+            setIsDeleted(false)
+            setLoading(true)
+            VillaServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
+        }
+    }, [isDeleted])
 
     const handleClose = () => {
-        setOpen(!open);
+        setVillaModalDelete(!villaModalDelete);
     };
 
     const columns = useMemo(
         () => [
-
             {
                 header: '#',
-                accessorKey: 'id',
-                meta: {
-                    className: 'cell-center'
-                }
+                cell: ({ row }) => { return row.original.id }
             },
             {
                 header: 'Villa Adı',
@@ -237,25 +221,22 @@ export default function ApartsList() {
             },
             {
                 header: 'Bölge',
-                accessorKey: 'attributes.region'
-              },
-              {
+                cell: ({ row }) => { return row.original.attributes.region }
+            },
+            {
                 header: 'Kapasite',
-                accessorKey: 'attributes.person'
-              },
-              {
+                cell: ({ row }) => { return row.original.attributes.person }
+            },
+            {
                 header: 'Oda Sayısı',
-                accessorKey: 'attributes.room'
-              },
+                cell: ({ row }) => { return row.original.attributes.room }
+            },
             {
                 header: 'Online Rez.',
                 accessorKey: 'attributes.onlineReservation',
                 cell: (cell) => {
-                    
-                    if(cell.getValue())
-                        return <Chip color="success" label="Aktif" size="small" variant="light" />;
-                    else 
-                        return <Chip color="error" label="Pasif" size="small" variant="light" />;    
+                    if (cell.getValue()) return <Chip color="success" label="Aktif" size="small" variant="light" />;
+                    else return <Chip color="error" label="Pasif" size="small" variant="light" />;
                     // switch (cell.getValue()) {
                     //     case 3:
                     //         return <Chip color="error" label="Rejected" size="small" variant="light" />;
@@ -281,7 +262,7 @@ export default function ApartsList() {
                             <Eye />
                         );
                     return (
-                        <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+                        <Stack direction="row" spacing={0}>
                             <Tooltip title="View">
                                 <IconButton color="secondary" onClick={row.getToggleExpandedHandler()}>
                                     {collapseIcon}
@@ -292,8 +273,6 @@ export default function ApartsList() {
                                     color="primary"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setSelectedCustomer(row.original);
-                                        setCustomerModal(true);
                                     }}
                                 >
                                     <Edit />
@@ -319,24 +298,23 @@ export default function ApartsList() {
         [theme]
     );
 
-    if (lists.length < 1) return <EmptyReactTable />;
+    if (loading) return (<Loader open={loading} />)
 
     return (
         <>
             <ReactTable
                 {...{
-                    data: lists,
+                    data,
                     columns,
-                    modalToggler: () => {
-                        setCustomerModal(true);
-                        setSelectedCustomer(null);
-                    }
+                    pagination,
+                    setPagination,
+                    setSorting,
+                    sorting,
+                    globalFilter,
+                    setGlobalFilter
                 }}
             />
-            <AlertCustomerDelete id={Number(customerDeleteId)} title={customerDeleteId} open={open} handleClose={handleClose} />
-            <CustomerModal open={customerModal} modalToggler={setCustomerModal} customer={selectedCustomer} />
+            <VillaModalDelete setIsDeleted={setIsDeleted} setLoading={setLoading} id={Number(customerDeleteId)} title={customerDeleteId} open={villaModalDelete} handleClose={handleClose} />
         </>
     );
 }
-
-ReactTable.propTypes = { data: PropTypes.array, columns: PropTypes.array, modalToggler: PropTypes.func };

@@ -1,16 +1,9 @@
-import PropTypes from 'prop-types';
 // material-ui
-import Dialog from '@mui/material/Dialog';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import DialogContent from '@mui/material/DialogContent';
+import { Dialog, Button, Stack, Typography, DialogContent } from '@mui/material';
 
 // project-imports
 import Avatar from 'components/@extended/Avatar';
 import { PopupTransition } from 'components/@extended/Transitions';
-
-import { deleteCustomer } from 'api/customer';
 import { openSnackbar } from 'api/snackbar';
 
 // assets
@@ -19,41 +12,26 @@ import { VillaRemove } from 'services/villaServices';
 
 // ==============================|| CUSTOMER - DELETE ||============================== //
 
-export default function AlertCustomerDelete({ id, title, open, handleClose, setLoading, setIsDeleted }) {
+export default function VillaModalDelete({ id, title, open, handleClose, setLoading, setIsDeleted }) {
   const deletehandler = async () => {
     setLoading(true)
 
     await VillaRemove(id).then((res) => {
-      console.log(res);
-      setIsDeleted(true)
-      // setLoading(false)
-      openSnackbar({
-        open: true,
-        message: 'Customer deleted successfully',
-        anchorOrigin: { vertical: 'top', horizontal: 'right' },
-        variant: 'alert',
+      setIsDeleted(true);
+      if (!res?.error) {
+        openSnackbar({
+          open: true,
+          message: 'Customer deleted successfully',
+          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          variant: 'alert',
 
-        alert: {
-          color: 'success'
-        }
-      });
+          alert: {
+            color: 'success'
+          }
+        });
+      }
       handleClose();
     });
-
-
-    // await deleteCustomer(id).then(() => {
-    //   openSnackbar({
-    //     open: true,
-    //     message: 'Customer deleted successfully',
-    //     anchorOrigin: { vertical: 'top', horizontal: 'right' },
-    //     variant: 'alert',
-
-    //     alert: {
-    //       color: 'success'
-    //     }
-    //   });
-    //   handleClose();
-    // });
   };
 
   return (
@@ -73,7 +51,7 @@ export default function AlertCustomerDelete({ id, title, open, handleClose, setL
           </Avatar>
           <Stack spacing={2}>
             <Typography variant="h4" align="center">
-              Are you sure you want to delete?
+              Villayı Silmek istediğinize eminimisiniz?
             </Typography>
             <Typography align="center">
               By deleting
@@ -84,7 +62,6 @@ export default function AlertCustomerDelete({ id, title, open, handleClose, setL
               user, all task assigned to that user will also be deleted.
             </Typography>
           </Stack>
-
           <Stack direction="row" spacing={2} sx={{ width: 1 }}>
             <Button fullWidth onClick={handleClose} color="secondary" variant="outlined">
               Cancel
@@ -98,5 +75,3 @@ export default function AlertCustomerDelete({ id, title, open, handleClose, setL
     </Dialog>
   );
 }
-
-AlertCustomerDelete.propTypes = { id: PropTypes.number, title: PropTypes.string, open: PropTypes.bool, handleClose: PropTypes.func };

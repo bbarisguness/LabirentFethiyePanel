@@ -3,8 +3,8 @@ import MainCard from 'components/MainCard';
 
 export default function VillaFile() {
   return (
-    <MainCard title="Villa File">
-      File
+    <MainCard title="Villa'ya Ait Dosyalar">
+      Yapım aşamasında
     </MainCard>
   );
 }

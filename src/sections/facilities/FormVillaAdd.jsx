@@ -43,11 +43,7 @@ const getInitialValues = () => {
   return newVilla;
 };
 
-// ==============================|| CUSTOMER ADD / EDIT - FORM ||============================== //
-
-export default function FormVillaAdd({ closeModal }) {
-
-
+export default function FormVillaAdd() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -67,21 +63,11 @@ export default function FormVillaAdd({ closeModal }) {
     onlineReservation: Yup.boolean().required('Rezervasyon seçeneği zorunludur')
   });
 
-
-
-  // const onContentChange = (editorState) => {
-  //   setEditorState(editorState);
-  //   setFieldValue('descriptionLong', stateToHTML(editorState.getCurrentContent()));
-  // };
-
   const formik = useFormik({
     initialValues: getInitialValues(),
     validationSchema: VillaSchema,
     enableReinitialize: true,
-    onSubmit: async (values, { setSubmitting }) => {
-      
-      
-
+    onSubmit: async (values, { setSubmitting }) => {         
       try {
 
         values.slug = values.name
@@ -353,5 +339,3 @@ export default function FormVillaAdd({ closeModal }) {
     </>
   );
 }
-
-FormVillaAdd.propTypes = { closeModal: PropTypes.func };

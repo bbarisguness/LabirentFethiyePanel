@@ -1,5 +1,5 @@
 const user = JSON.parse(localStorage.getItem("user"));
-const serviceToken=localStorage.getItem("serviceToken");
+const serviceToken = localStorage.getItem("serviceToken");
 
 function objectToFormData(data) {
   let form_data = new FormData();
@@ -43,12 +43,21 @@ function request(
       options.body = formData ? objectToFormData(data) : JSON.stringify(data);
     }
 
+    if (data && method === "PUT") {
+      options.body = formData ? objectToFormData(data) : JSON.stringify(data);
+    }
+
     if (data && !formData && method === "POST") {
+      options.headers["Content-Type"] = "application/json";
+    }
+
+    if (data && !formData && method === "PUT") {
       options.headers["Content-Type"] = "application/json";
     }
 
     try {
       response = await fetch('http://185.59.31.233:2030' + url, options);
+      //console.log(response.body);
       result = await response.json();
     } catch (error) {
       if (response?.status === 404) {
@@ -74,5 +83,6 @@ function request(
 export const post = (url, data, token = false, formData = false) => request(url, token, data, "POST", formData);
 export const get = (url, token = false) => request(url, token);
 export const remove = (url) => request(url, true, false, "DELETE");
+export const put = (url, data, token = false, formData = false) => request(url, token, data, "PUT", formData);
 
 

@@ -1,14 +1,5 @@
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Link from '@mui/material/Link';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Typography from '@mui/material/Typography';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+/* eslint-disable prettier/prettier */
+import { useMediaQuery, Grid, Stack, List, Divider, ListItem, ListItemIcon, Typography, ListItemSecondaryAction, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton } from '@mui/material';
 
 // third-party
 import { PatternFormat } from 'react-number-format';
@@ -18,28 +9,96 @@ import MainCard from 'components/MainCard';
 import Avatar from 'components/@extended/Avatar';
 import LinearWithLabel from 'components/@extended/progress/LinearWithLabel';
 
-//import defaultImages from 'assets/images/users/default.png';
-
-
-// assets
-import { CallCalling, Gps, Link1, Sms } from 'iconsax-react';
-import { GetVilla } from 'services/villaServices';
-import { useState,useEffect } from 'react';
+import { CallCalling, Gps, Sms, Trash, Wifi } from 'iconsax-react';
+import { GetVilla, VillaChangeState } from 'services/villaServices';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-
-// ==============================|| ACCOUNT PROFILE - BASIC ||============================== //
+import { openSnackbar } from 'api/snackbar';
+import Loader from 'components/Loader';
 
 export default function VillaSummarySection() {
   const matchDownMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const params = useParams();
-
   const [villa, setVilla] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (params.id > 0)
-      GetVilla(params.id).then((res) => setVilla(res.data))
-  }, [])
+    if (params.id > 0 && loading) {
+      GetVilla(params.id).then((res) => { setVilla(res.data); setLoading(false) })
+    }
+  }, [loading])
 
+  function changeStateHandle() {
+
+    if (villa?.attributes?.publishedAt === null) {
+      const nowDate = new Date()
+      const data = {
+        publishedAt: nowDate
+      }
+      VillaChangeState(params.id, { data }).then((res) => {
+        setLoading(true)
+        if (!res?.error) {
+
+          openSnackbar({
+            open: true,
+            message: 'Villa Yayınlandı.',
+            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+            variant: 'alert',
+            alert: {
+              color: 'success'
+            }
+          });
+        }
+        else {
+          openSnackbar({
+            open: true,
+            message: res?.error?.message,
+            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+            variant: 'alert',
+            alert: {
+              color: 'error'
+            }
+          });
+
+        }
+      })
+
+    } else {
+      const data = {
+        publishedAt: null
+      }
+      VillaChangeState(params.id, { data }).then((res) => {
+        setLoading(true)
+        if (!res?.error) {
+
+
+
+          openSnackbar({
+            open: true,
+            message: 'Villa Yayından Kaldırıldı.',
+            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+            variant: 'alert',
+            alert: {
+              color: 'warning'
+            }
+          });
+        }
+        else {
+          openSnackbar({
+            open: true,
+            message: res?.error?.message,
+            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+            variant: 'alert',
+            alert: {
+              color: 'error'
+            }
+          });
+        }
+      })
+    }
+  }
+
+  if (loading) return (<Loader open={loading} />)
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={5} md={4} xl={3}>
@@ -50,7 +109,9 @@ export default function VillaSummarySection() {
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <Stack direction="row" justifyContent="flex-end">
-
+                      <div onClick={() => changeStateHandle()}>
+                        <Chip style={{ cursor: 'pointer' }} label={villa?.attributes?.publishedAt === null ? 'Pasif' : 'Aktif'} size="small" color={villa?.attributes?.publishedAt === null ? 'error' : 'success'} />
+                      </div>
                     </Stack>
                     <Stack spacing={2.5} alignItems="center">
                       <Avatar alt={villa.attributes.name} size="xxl" src={villa?.attributes?.photos?.data[0]?.attributes?.photo?.data?.attributes?.url} />
@@ -110,7 +171,7 @@ export default function VillaSummarySection() {
                           <Typography align="right">Fethiye</Typography>
                         </ListItemSecondaryAction>
                       </ListItem>
-                      {/* <ListItem>
+                      <ListItem>
                         <ListItemIcon>
                           <Wifi size={18} />
                         </ListItemIcon>
@@ -120,7 +181,7 @@ export default function VillaSummarySection() {
                       </ListItem>
                       <ListItem>
                         <ListItemIcon>
-                          <span>Water Bill</span>
+                          <span>Su No</span>
                         </ListItemIcon>
                         <ListItemSecondaryAction>
                           <Typography align="right">{villa.attributes.waterMaterNumber || '-'}</Typography>
@@ -128,7 +189,7 @@ export default function VillaSummarySection() {
                       </ListItem>
                       <ListItem>
                         <ListItemIcon>
-                          <span>Electricity Bill</span>
+                          <span>Elektrik No</span>
                         </ListItemIcon>
                         <ListItemSecondaryAction>
                           <Typography align="right">{villa.attributes.electricityMeterNumber || '-'}</Typography>
@@ -136,227 +197,49 @@ export default function VillaSummarySection() {
                       </ListItem>
                       <ListItem>
                         <ListItemIcon>
-                          <span>İnternet Bill</span>
+                          <span>İnternet No</span>
                         </ListItemIcon>
                         <ListItemSecondaryAction>
                           <Typography align="right">{villa.attributes.internetMeterNumber || '-'}</Typography>
                         </ListItemSecondaryAction>
-                      </ListItem> */}
+                      </ListItem>
                     </List>
                   </Grid>
                 </Grid>
               </MainCard>
             )}
           </Grid>
-          <Grid item xs={12}>
-            <MainCard title="Skills">
-              <Grid container spacing={1.25}>
-                <Grid item xs={6}>
-                  <Typography color="secondary">Junior</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <LinearWithLabel value={30} />
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography color="secondary">UX Reseacher</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <LinearWithLabel value={80} />
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography color="secondary">Wordpress</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <LinearWithLabel value={90} />
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography color="secondary">HTML</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <LinearWithLabel value={30} />
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography color="secondary">Graphic Design</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <LinearWithLabel value={95} />
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography color="secondary">Code Style</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <LinearWithLabel value={75} />
-                </Grid>
-              </Grid>
-            </MainCard>
-          </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12} sm={7} md={8} xl={9}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3}>          
           <Grid item xs={12}>
-            <MainCard title="About me">
-              <Typography color="secondary">
-                Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer based in Website, I create digital Products a
-                more Beautiful and usable place. Morbid accusant ipsum. Nam nec tellus at.
-              </Typography>
-            </MainCard>
-          </Grid>
-          <Grid item xs={12}>
-            <MainCard title="Personal Details">
-              <List sx={{ py: 0 }}>
-                <ListItem divider={!matchDownMD}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Full Name</Typography>
-                        <Typography>Anshan Handgun</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Father Name</Typography>
-                        <Typography>Mr. Deepen Handgun</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem divider={!matchDownMD}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Phone</Typography>
-                        <Typography>
-                          (+1-876) <PatternFormat value={8654239581} displayType="text" type="text" format="#### ### ###" />
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Country</Typography>
-                        <Typography>New York</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem divider={!matchDownMD}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Email</Typography>
-                        <Typography>anshan.dh81@gmail.com</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Zip Code</Typography>
-                        <Typography>956 754</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem>
-                  <Stack spacing={0.5}>
-                    <Typography color="secondary">Address</Typography>
-                    <Typography>Street 110-B Kalians Bag, Dewan, M.P. New York</Typography>
-                  </Stack>
-                </ListItem>
-              </List>
-            </MainCard>
-          </Grid>
-          <Grid item xs={12}>
-            <MainCard title="Education">
-              <List sx={{ py: 0 }}>
-                <ListItem divider>
-                  <Grid container spacing={matchDownMD ? 0.5 : 3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Master Degree (Year)</Typography>
-                        <Typography>2014-2017</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Institute</Typography>
-                        <Typography>-</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem divider>
-                  <Grid container spacing={matchDownMD ? 0.5 : 3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Bachelor (Year)</Typography>
-                        <Typography>2011-2013</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Institute</Typography>
-                        <Typography>Imperial College London</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem>
-                  <Grid container spacing={matchDownMD ? 0.5 : 3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">School (Year)</Typography>
-                        <Typography>2009-2011</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Institute</Typography>
-                        <Typography>School of London, England</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              </List>
-            </MainCard>
-          </Grid>
-          <Grid item xs={12}>
-            <MainCard title="Emplyment">
-              <List sx={{ py: 0 }}>
-                <ListItem divider>
-                  <Grid container spacing={matchDownMD ? 0.5 : 3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Senior UI/UX designer (Year)</Typography>
-                        <Typography>2019-Current</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Job Responsibility</Typography>
-                        <Typography>
-                          Perform task related to project manager with the 100+ team under my observation. Team management is key role in
-                          this company.
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem>
-                  <Grid container spacing={matchDownMD ? 0.5 : 3}>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Trainee cum Project Manager (Year)</Typography>
-                        <Typography>2017-2019</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Stack spacing={0.5}>
-                        <Typography color="secondary">Job Responsibility</Typography>
-                        <Typography>Team management is key role in this company.</Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              </List>
+            <MainCard title="Son 10 Rezervasyon">
+              <TableContainer>
+                <Table sx={{ minWidth: 350 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Misafir</TableCell>
+                      <TableCell align="left">Giriş Tarihi</TableCell>
+                      <TableCell align="left">Çıkış Tarihi</TableCell>
+                      <TableCell align="left">Tutar</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {villa.attributes.reservations.data.map((row) => (
+                      <TableRow hover key={row.id}>
+                        <TableCell sx={{ pl: 3 }} component="th" scope="row">
+                          {row.attributes.reservation_infos?.data[0]?.attributes.name}{' '}
+                          {row.attributes.reservation_infos?.data[0]?.attributes.surname}
+                        </TableCell>
+                        <TableCell align="left">{row.attributes.checkIn}</TableCell>
+                        <TableCell align="left">{row.attributes.checkOut}</TableCell>
+                        <TableCell align="left">{row.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </MainCard>
           </Grid>
         </Grid>

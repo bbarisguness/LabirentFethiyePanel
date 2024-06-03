@@ -47,36 +47,36 @@ const MainRoutes = {
               element: <VillaAdd />
             },
             {
-              path: 'villas-show/:id',
+              path: 'villas-show',
               element: <VillaShow />,
               children: [
                 {
-                  path: 'summary',
+                  path: 'summary/:id',
                   element: <VillaSummary />
                 },
                 {
-                  path: 'reservation',
+                  path: 'reservation/:id',
                   element: <VillaReservation />
                 },
                 {
-                  path: 'price',
+                  path: 'price/:id',
                   //element: <VillaPrice />
                   element: <VillaPrice />
                 },
                 {
-                  path: 'gallery',
+                  path: 'gallery/:id',
                   element: <VillaGallery />
                 },
                 {
-                  path: 'file',
+                  path: 'file/:id',
                   element: <VillaFile />
                 },
                 {
-                  path: 'content',
+                  path: 'content/:id',
                   element: <VillaContent />
                 },
                 {
-                  path: 'available-date',
+                  path: 'available-date/:id',
                   element: <VillaAvailableDate />
                 }
               ]

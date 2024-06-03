@@ -1,10 +1,7 @@
-// project-imports
-import MainCard from 'components/MainCard';
+import VillaContentSection from 'sections/facilities/tabs/villa-content';
 
 export default function VillaContent() {
   return (
-    <MainCard title="Villa Content">
-      Content
-    </MainCard>
+    <VillaContentSection />
   );
 }
