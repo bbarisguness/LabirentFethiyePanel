@@ -212,9 +212,9 @@ export default function VillaSummarySection() {
         </Grid>
       </Grid>
       <Grid item xs={12} sm={7} md={8} xl={9}>
-        <Grid container spacing={3}>          
+        <Grid container spacing={3}>
           <Grid item xs={12}>
-            <MainCard title="Son 10 Rezervasyon">
+            <MainCard title="Son 5 Rezervasyon">
               <TableContainer>
                 <Table sx={{ minWidth: 350 }} aria-label="simple table">
                   <TableHead>
@@ -226,17 +226,23 @@ export default function VillaSummarySection() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {villa.attributes.reservations.data.map((row) => (
-                      <TableRow hover key={row.id}>
-                        <TableCell sx={{ pl: 3 }} component="th" scope="row">
-                          {row.attributes.reservation_infos?.data[0]?.attributes.name}{' '}
-                          {row.attributes.reservation_infos?.data[0]?.attributes.surname}
-                        </TableCell>
-                        <TableCell align="left">{row.attributes.checkIn}</TableCell>
-                        <TableCell align="left">{row.attributes.checkOut}</TableCell>
-                        <TableCell align="left">{row.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</TableCell>
-                      </TableRow>
-                    ))}
+                    {
+                      villa?.attributes?.reservations?.data?.map((row, i) => {
+                        if (i < 4) {
+                          return (
+                            <TableRow hover key={row.id}>
+                              <TableCell sx={{ pl: 3 }} component="th" scope="row">
+                                {row.attributes.reservation_infos?.data[0]?.attributes.name}{' '}
+                                {row.attributes.reservation_infos?.data[0]?.attributes.surname}
+                              </TableCell>
+                              <TableCell align="left">{row.attributes.checkIn}</TableCell>
+                              <TableCell align="left">{row.attributes.checkOut}</TableCell>
+                              <TableCell align="left">{row.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</TableCell>
+                            </TableRow>
+                          )
+                        }
+                      })
+                    }
                   </TableBody>
                 </Table>
               </TableContainer>
