@@ -15,17 +15,26 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { openSnackbar } from 'api/snackbar';
 import Loader from 'components/Loader';
+import { GetReservationsTop5 } from 'services/reservationServices';
 
 export default function VillaSummarySection() {
   const matchDownMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const params = useParams();
   const [villa, setVilla] = useState();
   const [loading, setLoading] = useState(true);
+  const [reservations, setReservations] = useState([])
 
   useEffect(() => {
     if (params.id > 0 && loading) {
-      GetVilla(params.id).then((res) => { setVilla(res.data); setLoading(false) })
+      GetVilla(params.id).then((res) => {
+        setVilla(res.data);
+        GetReservationsTop5(params.id).then((res) => {
+          setReservations(res.data)
+          setLoading(false)
+        })
+      })
     }
+
   }, [loading])
 
   function changeStateHandle() {
@@ -227,8 +236,7 @@ export default function VillaSummarySection() {
                   </TableHead>
                   <TableBody>
                     {
-                      villa?.attributes?.reservations?.data?.map((row, i) => {
-                        if (i < 4) {
+                      reservations?.map((row, i) => {
                           return (
                             <TableRow hover key={row.id}>
                               <TableCell sx={{ pl: 3 }} component="th" scope="row">
@@ -240,7 +248,6 @@ export default function VillaSummarySection() {
                               <TableCell align="left">{row.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</TableCell>
                             </TableRow>
                           )
-                        }
                       })
                     }
                   </TableBody>

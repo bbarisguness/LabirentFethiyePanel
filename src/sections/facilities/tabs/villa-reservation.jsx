@@ -3,7 +3,7 @@ import { useMemo, useState, Fragment, useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Chip, Divider, Stack, Button, Table, TableCell, TableBody, TableHead, TableRow, TableContainer, Typography, Box, } from '@mui/material';
+import { Chip, Divider, Stack, Button, Table, TableCell, TableBody, TableHead, TableRow, TableContainer, Typography, Box, FormControlLabel, Switch, } from '@mui/material';
 
 // third-party
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import ReservationModal from 'sections/reservations/ReservationModal';
 
 const fallbackData = [];
-function ReactTable({ data, columns, modalToggler, pagination, setPagination, setSorting, sorting, globalFilter, setGlobalFilter }) {
+function ReactTable({ data, columns, modalToggler, pagination, setPagination, setSorting, sorting, globalFilter, setGlobalFilter, showAllReservation, setShowAllReservation }) {
 
     const navigate = useNavigate();
 
@@ -64,11 +64,13 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
             <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ padding: 3 }}>
                 <DebouncedInput
                     value={globalFilter ?? ''}
+                    disabled={showAllReservation}
                     onFilterChange={(value) => setGlobalFilter(String(value))}
                     placeholder={`Search ${data?.meta?.pagination?.total} records...`}
                 />
 
                 <Stack direction="row" alignItems="center" spacing={2}>
+                    <FormControlLabel style={{ position: 'relative', top: '5px' }} control={<Switch sx={{ mt: 0 }} />} label={<p style={{ position: 'relative', top: '-4px' }}>Tüm rezervasyonlar</p>} labelPlacement="start" checked={showAllReservation} onChange={() => setShowAllReservation(!showAllReservation)} />
                     <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
                         Rezervasyon Ekle
                     </Button>
@@ -160,6 +162,7 @@ export default function VillaReservationSection() {
 
     const [reservationModal, setReservationModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false)
+    const [showAllReservation, setShowAllReservation] = useState(false)
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -172,19 +175,20 @@ export default function VillaReservationSection() {
 
     useEffect(() => {
         setLoading(true)
-        ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id).then((res) => { setData(res); setLoading(false); });
-    }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter]);
+        ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation).then((res) => { setData(res); setLoading(false); });
+    }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter, showAllReservation]);
+
 
     useEffect(() => {
         setPagination({ ...pagination, pageIndex: 0 })
-    }, [globalFilter])
+    }, [globalFilter, showAllReservation])
 
     useEffect(() => {
         if (isDeleted) {
             setIsDeleted(false)
             setLoading(true)
             //ReservationServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
-            ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id)
+            ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation)
         }
     }, [isDeleted])
 
@@ -205,7 +209,7 @@ export default function VillaReservationSection() {
                                 src={getImageUrl(`avatar-${!row.original.avatar ? 1 : row.original.avatar}.png`, ImagePath.USERS)}
                             />
                             <Stack spacing={0}>
-                                <Typography variant="subtitle1">{row.original.attributes.reservation_infos?.data[0]?.attributes.name + ' ' + row.original.attributes.reservation_infos?.data[0]?.attributes.surname}</Typography>
+                                <Typography variant="subtitle1">{`${row?.original?.attributes?.reservation_infos?.data[0]?.attributes?.name ? row?.original?.attributes?.reservation_infos?.data[0]?.attributes?.name : 'Ev Sahibi'} ${row?.original?.attributes?.reservation_infos?.data[0]?.attributes?.surname ? row?.original?.attributes?.reservation_infos?.data[0]?.attributes?.surname : ''}`}</Typography>
                             </Stack>
                         </Stack>
                     )
@@ -264,7 +268,9 @@ export default function VillaReservationSection() {
                     setSorting,
                     sorting,
                     globalFilter,
-                    setGlobalFilter
+                    setGlobalFilter,
+                    showAllReservation,
+                    setShowAllReservation
                 }}
             />
 

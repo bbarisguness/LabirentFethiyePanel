@@ -2,10 +2,18 @@
 import { get, post, remove } from './request';
 
 
-const GetReservations = (page, size, sort = true, fieldName = 'id', filter, id) =>
-    get(
-        `/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][villa][id][$eq]=${id}&filters[$and][1][reservation_infos][name][$containsi]=${filter}`
-    );
+const GetReservations = (page, size, sort = true, fieldName = 'id', filter, id, homeOwner = false) => {
+    if (!homeOwner) {
+        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][villa][id][$eq]=${id}&filters[$and][1][homeOwner][$eq]=false&filters[$and][2][reservation_infos][name][$containsi]=${filter}`);
+    } else {
+        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][villa][id][$eq]=${id}`);
+    }
+}
+
+const GetReservationsTop5 = (id) => {
+    return get(`/api/reservations?sort[0]=createdAt:desc&pagination[page]=1&pagination[pageSize]=5&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[homeOwner][$eq]=false&filters[villa][id][$eq]=${id}`);
+}
+
 
 const GetReservation = (id) =>
     get(
@@ -31,4 +39,4 @@ const GetAvailibleDate = (villaId) => {
 
     return get(`/api/reservations?filters[$or][0][checkOut][$gte]=${year}-${month}-${day}&filters[$or][1][checkIn][$eq]=${year}-${month}-${day}&filters[reservationStatus][$ne]=110&filters[villa][id][$eq]=${villaId}&sort[0]=checkIn:asc&fields[0]=checkIn&fields[1]=checkOut&pagination[pageSize]=100&pagination[page]=1`)
 }
-export { GetReservations, GetReservation, AddReservation, AddReservationInfo, GetAvailibleDate }
+export { GetReservations, GetReservation, AddReservation, AddReservationInfo, GetAvailibleDate, GetReservationsTop5 }
