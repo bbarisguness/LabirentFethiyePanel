@@ -53,7 +53,8 @@ const getInitialValues = () => {
         reservationStatus: '',
         customerPaymentType: '',
         description: '',
-        reservation_infos: {}
+        reservation_infos: {},
+        homeOwner: false
     };
 
 
@@ -103,25 +104,25 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                 formik.values.reservationStatus = '120';
                 formik.values.customerPaymentType = '120';
                 formik.values.total = formik.values.amount - formik.values.discount;
+                formik.values.homeOwner = false,
 
+                    // formik.values.reservation_infos.name = formik.values.name
+                    // formik.values.reservation_infos.surname = formik.values.surname
+                    // formik.values.reservation_infos.idNo = formik.values.idNo
+                    // formik.values.reservation_infos.phone = formik.values.phone
+                    // formik.values.reservation_infos.email = formik.values.email
+                    // formik.values.reservation_infos.owner = true
+                    // formik.values.reservation_infos.peopleType = "Adult"
 
-                // formik.values.reservation_infos.name = formik.values.name
-                // formik.values.reservation_infos.surname = formik.values.surname
-                // formik.values.reservation_infos.idNo = formik.values.idNo
-                // formik.values.reservation_infos.phone = formik.values.phone
-                // formik.values.reservation_infos.email = formik.values.email
-                // formik.values.reservation_infos.owner = true
-                // formik.values.reservation_infos.peopleType = "Adult"
-
-                formik.values.reservation_infos = {
-                    name: formik.values.name,
-                    surname: formik.values.surname,
-                    idNo: formik.values.idNo,
-                    phone: formik.values.phone,
-                    email: formik.values.email,
-                    owner: true,
-                    peopleType: "Adult"
-                }
+                    formik.values.reservation_infos = {
+                        name: formik.values.name,
+                        surname: formik.values.surname,
+                        idNo: formik.values.idNo,
+                        phone: formik.values.phone,
+                        email: formik.values.email,
+                        owner: true,
+                        peopleType: "Adult"
+                    }
 
                 //console.log(values);
 
@@ -260,7 +261,7 @@ export default function FormReservationAdd({ villaId, closeModal }) {
         }
     };
 
-    const handleHomeOwner=()=>{
+    const handleHomeOwner = () => {
         setLoading(true)
         if (date1 && date2) {
             if (new Date(date1) >= new Date(date2)) {
@@ -274,8 +275,29 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                 });
                 return;
             }
-            
+
             // ev sahibi rezervasyonu eklenecek.
+            console.log("date1", date1);
+            console.log("date2", date2);
+
+
+            const data = {
+                data: {
+                    checkIn: moment(date1).format('YYYY-MM-DD').toString(),
+                    checkOut: moment(date2).format('YYYY-MM-DD').toString(),
+                    villa: { connect: [params.id] },
+                    reservationStatus: '120',
+                    amount: 0,
+                    total: 0,
+                    customerPaymentType: '0',
+                    homeOwner: true,
+                }
+            }
+
+            AddReservation(data).then(() => {
+                setLoading(false);
+                closeModal();
+            });
 
         }
         else {

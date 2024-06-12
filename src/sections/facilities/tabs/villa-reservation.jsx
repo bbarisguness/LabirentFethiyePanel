@@ -205,7 +205,7 @@ export default function VillaReservationSection() {
                                 src={getImageUrl(`avatar-${!row.original.avatar ? 1 : row.original.avatar}.png`, ImagePath.USERS)}
                             />
                             <Stack spacing={0}>
-                                <Typography variant="subtitle1">{row.original.attributes.reservation_infos.data[0].attributes.name + ' ' + row.original.attributes.reservation_infos.data[0].attributes.surname}</Typography>
+                                <Typography variant="subtitle1">{row.original.attributes.reservation_infos?.data[0]?.attributes.name + ' ' + row.original.attributes.reservation_infos?.data[0]?.attributes.surname}</Typography>
                             </Stack>
                         </Stack>
                     )
@@ -249,7 +249,7 @@ export default function VillaReservationSection() {
     );
 
     if (loading) return (<Loader open={loading} />)
-
+    console.log('reservations = ', data);
     return (
         <>
             <ReactTable
