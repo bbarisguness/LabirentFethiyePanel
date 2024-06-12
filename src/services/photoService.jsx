@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { get, post, remove,put } from './request'
+import { get, post, remove, put } from './request'
 import * as qs from 'qs'
 
+const Upload = (payload) => post(`/api/upload`, payload, true, true)
 
 const GetPhotos = (villaId) => {
     const query = qs.stringify({
@@ -26,6 +27,6 @@ const GetPhotos = (villaId) => {
 
 
 const PhotoPut = (id, payload) => put(`/api/photos/${id}`, payload, true);
-const PhotoPost = ( payload) => post(`/api/photos`, payload, true);
+const PhotoPost = (payload) => post(`/api/photos`, payload, true);
 
-export { GetPhotos,PhotoPut,PhotoPost }
+export { GetPhotos, PhotoPut, PhotoPost, Upload }

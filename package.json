@@ -41,6 +41,7 @@
     "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
+    "react-dropzone": "^14.2.3",
     "react-intl": "^6.6.5",
     "react-number-format": "^5.3.4",
     "react-quill": "^2.0.0",

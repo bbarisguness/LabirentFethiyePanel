@@ -13,6 +13,7 @@ import { ReactSortable } from 'react-sortablejs';
 import Loader from 'components/Loader';
 import { Add, ArrangeHorizontal, CloudChange } from 'iconsax-react';
 import { openSnackbar } from 'api/snackbar';
+import PhotoModal from 'sections/photoSections/PhotoModal';
 const CustomComponent = forwardRef < HTMLDivElement > ((props, ref) => {
   return <div ref={ref}>{props.children}</div>;
 });
@@ -24,6 +25,8 @@ export default function VillaGallerySection() {
   const [lineChangeLoading, setLineChangeLoading] = useState(true);
   const [photoList, setPhotoList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [photoModal, setPhotoModal] = useState(false)
+  const [isEdit, setIsEdit] = useState(true);
 
   useEffect(() => {
     if (params.id > 0 && loading && lineChangeLoading)
@@ -75,7 +78,7 @@ export default function VillaGallerySection() {
 
 
                 <Stack direction="row" alignItems="center" spacing={2}>
-                  <Button variant="contained" startIcon={<Add />} size="large">
+                  <Button variant="contained" startIcon={<Add />} size="large" onClick={() => { setPhotoModal(true) }}>
                     Resim Ekle
                   </Button>
                   {
@@ -102,6 +105,8 @@ export default function VillaGallerySection() {
                 )}
 
               </Grid>
+
+              <PhotoModal open={photoModal} modalToggler={setPhotoModal} villaId={params.id} setIsEdit={setIsEdit} />
 
             </MainCard>
           </Grid>
