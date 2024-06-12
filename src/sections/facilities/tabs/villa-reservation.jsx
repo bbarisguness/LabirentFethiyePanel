@@ -70,7 +70,7 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                 />
 
                 <Stack direction="row" alignItems="center" spacing={2}>
-                    <FormControlLabel style={{ position: 'relative', top: '5px' }} control={<Switch sx={{ mt: 0 }} />} label={<p style={{ position: 'relative', top: '-4px' }}>Tüm rezervasyonlar</p>} labelPlacement="start" checked={showAllReservation}  onChange={() => setShowAllReservation(!showAllReservation)} />
+                    <FormControlLabel style={{ position: 'relative', top: '5px' }} control={<Switch sx={{ mt: 0 }} />} label={<p style={{ position: 'relative', top: '-4px' }}>Tüm rezervasyonlar</p>} labelPlacement="start" checked={showAllReservation} onChange={() => setShowAllReservation(!showAllReservation)} />
                     <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
                         Rezervasyon Ekle
                     </Button>
@@ -176,12 +176,12 @@ export default function VillaReservationSection() {
     useEffect(() => {
         setLoading(true)
         ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation).then((res) => { setData(res); setLoading(false); });
-    }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter,showAllReservation]);
+    }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter, showAllReservation]);
 
 
     useEffect(() => {
         setPagination({ ...pagination, pageIndex: 0 })
-    }, [globalFilter])
+    }, [globalFilter, showAllReservation])
 
     useEffect(() => {
         if (isDeleted) {

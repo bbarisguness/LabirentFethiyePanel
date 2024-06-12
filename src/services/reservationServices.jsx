@@ -10,6 +10,10 @@ const GetReservations = (page, size, sort = true, fieldName = 'id', filter, id, 
     }
 }
 
+const GetReservationsTop5 = (id) => {
+    return get(`/api/reservations?sort[0]=createdAt:desc&pagination[page]=1&pagination[pageSize]=5&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[homeOwner][$eq]=false&filters[villa][id][$eq]=${id}`);
+}
+
 
 const GetReservation = (id) =>
     get(
@@ -35,4 +39,4 @@ const GetAvailibleDate = (villaId) => {
 
     return get(`/api/reservations?filters[$or][0][checkOut][$gte]=${year}-${month}-${day}&filters[$or][1][checkIn][$eq]=${year}-${month}-${day}&filters[reservationStatus][$ne]=110&filters[villa][id][$eq]=${villaId}&sort[0]=checkIn:asc&fields[0]=checkIn&fields[1]=checkOut&pagination[pageSize]=100&pagination[page]=1`)
 }
-export { GetReservations, GetReservation, AddReservation, AddReservationInfo, GetAvailibleDate }
+export { GetReservations, GetReservation, AddReservation, AddReservationInfo, GetAvailibleDate, GetReservationsTop5 }
