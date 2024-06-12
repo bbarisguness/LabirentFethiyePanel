@@ -2,10 +2,14 @@
 import { get, post, remove } from './request';
 
 
-const GetReservations = (page, size, sort = true, fieldName = 'id', filter, id) =>
-    get(
-        `/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][villa][id][$eq]=${id}&filters[$and][1][reservation_infos][name][$containsi]=${filter}`
-    );
+const GetReservations = (page, size, sort = true, fieldName = 'id', filter, id, homeOwner = false) => {
+    if (!homeOwner) {
+        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][villa][id][$eq]=${id}&filters[$and][1][homeOwner][$eq]=false&filters[$and][2][reservation_infos][name][$containsi]=${filter}`);
+    } else {
+        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][villa][id][$eq]=${id}`);
+    }
+}
+
 
 const GetReservation = (id) =>
     get(
