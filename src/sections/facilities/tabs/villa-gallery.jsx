@@ -12,6 +12,7 @@ import { GetPhotos, PhotoPut } from 'services/photoService';
 import { ReactSortable } from 'react-sortablejs';
 import Loader from 'components/Loader';
 import { Add, ArrangeHorizontal, CloudChange } from 'iconsax-react';
+import { openSnackbar } from 'api/snackbar';
 const CustomComponent = forwardRef < HTMLDivElement > ((props, ref) => {
   return <div ref={ref}>{props.children}</div>;
 });
@@ -25,30 +26,15 @@ export default function VillaGallerySection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (params.id > 0 && loading)
-      GetPhotos(params.id).then((res) => { setPhoto(res.data); setPhotoList(res.data); setLoading(false); })
-  }, [loading])
+    if (params.id > 0 && loading && lineChangeLoading)
+      GetPhotos(params.id).then((res) => { setPhoto(res.data); setPhotoList(res.data); setLoading(false); setLineChangeLoading(false) })
+  }, [loading, lineChangeLoading])
 
   const handeLineSave = () => {
     setLoading(true)
-    // const values = {
-    //   id: 2583,
-    //   line: 2
-    // }
 
-    // const data = {
-    //   ...values
-    // }
-
-    //PhotoPut(2583, { data });
-
-
-    var indexLenght = 0;
-    
     photo.forEach((item, index) => {
       console.log('click => ', item.id + ' - ' + index);
-
-      indexLenght = index + 1;
 
       const values = {
         id: item.id,
@@ -59,41 +45,21 @@ export default function VillaGallerySection() {
         ...values
       }
 
-      PhotoPut(item.id, { data }).then((res)=> {
-        //burada kaldim|
-        setLoading(false)
+      PhotoPut(item.id, { data }).then((res) => {
+        if ((index + 1) === photo.length) {
+          setLineChangeLoading(true);
+          openSnackbar({
+            open: true,
+            message: 'Sıralama Düzenlendi.',
+            variant: 'alert',
+            alert: {
+              color: 'success'
+            }
+          });
+        }
       });
 
-
-      // PhotoUpdate(item.id, { data }).then((res) => {
-      //   //console.log(res);
-      // })
-      // apiRequest('PUT', '/photos/' + item.id, {
-      //   data: {
-      //     id: item.id,
-      //     line: index
-      //   }
-      // }).then((res) => {
-      //   indexLenght = index + 1;
-      //   if (photo.length === indexLenght) {
-      //     dispatch(
-      //       openSnackbar({
-      //         open: true,
-      //         message: 'Sıralama Güncellendi..',
-      //         variant: 'alert',
-      //         alert: {
-      //           color: 'success'
-      //         },
-      //         close: false
-      //       })
-      //     );
-      //     setLineChangeLoading(false);
-      //   }
-      // });
     });
-
-
-
 
   };
 
@@ -131,7 +97,6 @@ export default function VillaGallerySection() {
                     ))}
                   </ReactSortable>
                 )}
-
 
               </Grid>
 

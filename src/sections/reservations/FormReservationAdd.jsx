@@ -260,6 +260,37 @@ export default function FormReservationAdd({ villaId, closeModal }) {
         }
     };
 
+    const handleHomeOwner=()=>{
+        setLoading(true)
+        if (date1 && date2) {
+            if (new Date(date1) >= new Date(date2)) {
+                openSnackbar({
+                    open: true,
+                    message: 'Lütfen Tarihleri Kontrol Ediniz.',
+                    variant: 'alert',
+                    alert: {
+                        color: 'error'
+                    }
+                });
+                return;
+            }
+            
+            // ev sahibi rezervasyonu eklenecek.
+
+        }
+        else {
+            openSnackbar({
+                open: true,
+                message: 'Lütfen Tarih Seçiniz.',
+                variant: 'alert',
+                alert: {
+                    color: 'error'
+                }
+            });
+            setLoading(false)
+        }
+    }
+
     if (loading)
         return (
             <Box sx={{ p: 5 }}>
@@ -289,7 +320,7 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                                             <DatePicker
                                                 id="checkIn"
                                                 value={date1}
-                                                onChange={(newValue) => {setDate1(newValue); }}
+                                                onChange={(newValue) => { setDate1(newValue); }}
                                                 slotProps={{ textField: { fullWidth: true } }} />
                                         </Stack>
                                     </Grid>
@@ -298,8 +329,8 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                                             <InputLabel htmlFor="checkOut">Çıkış Tarihi</InputLabel>
                                             <DatePicker
                                                 id="checkOut"
-                                                value={date2}                                                
-                                                minDate={date1}                                                
+                                                value={date2}
+                                                minDate={date1}
                                                 disabled={!date1}
                                                 onChange={(newValue) => setDate2(newValue)}
                                                 slotProps={{ textField: { fullWidth: true } }} />
@@ -442,23 +473,21 @@ export default function FormReservationAdd({ villaId, closeModal }) {
                         </DialogContent>
                         <Divider />
                         <DialogActions sx={{ p: 2.5 }}>
-                            <Grid container justifyContent="end" alignItems="end">
-
-                                <Grid item xs={4}>
-
-                                    {!isAvailable ? <Stack direction="row" spacing={2} alignItems="end">
+                            <Grid container justifyContent="space-between" alignItems="normal">
+                                {!isAvailable ? <><Stack direction="row" spacing={2} alignItems="start">
+                                    <Button type="button" variant="contained" color='primary' size='large' onClick={handleHomeOwner}>
+                                        EV SAHİBİ
+                                    </Button>
+                                </Stack>
+                                    <Stack direction="row" spacing={2} alignItems="end">
                                         <Button type="button" variant="contained" color='warning' size='large' onClick={handleAvailible}>
                                             FİYAT SORGULA
                                         </Button>
-                                    </Stack> : <Stack direction="row" spacing={2} alignItems="end">
-                                        <Button type="submit" variant="contained" size='large' disabled={isSubmitting}>
-                                            REZERVASYON OLUŞTUR
-                                        </Button>
-                                    </Stack>}
-
-
-                                    {/*  */}
-                                </Grid>
+                                    </Stack></> : <Stack direction="row" spacing={2} alignItems="end">
+                                    <Button type="submit" variant="contained" size='large' disabled={isSubmitting}>
+                                        REZERVASYON OLUŞTUR
+                                    </Button>
+                                </Stack>}
                             </Grid>
                         </DialogActions>
                     </Form>
