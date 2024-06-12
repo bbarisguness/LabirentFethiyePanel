@@ -9,7 +9,7 @@ import SimpleBar from 'components/third-party/SimpleBar';
 import FormPhotoAdd from './FormPhotoAdd';
 
 
-export default function PhotoModal({ open, modalToggler, villaId, setIsEdit }) {
+export default function PhotoModal({ open, modalToggler, villaId, setIsEdit,lastLine,setLoading }) {
 
     const closeModal = () => modalToggler(false);
 
@@ -29,7 +29,7 @@ export default function PhotoModal({ open, modalToggler, villaId, setIsEdit }) {
                         content={false}
                     >
                         <SimpleBar sx={{ maxHeight: `calc(100vh - 48px)`, '& .simplebar-content': { display: 'flex', flexDirection: 'column' } }}>                            
-                            <FormPhotoAdd villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} />
+                            <FormPhotoAdd villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} lastLine={lastLine} setLoading={setLoading} />
                         </SimpleBar>
                     </MainCard>
                 </Modal>

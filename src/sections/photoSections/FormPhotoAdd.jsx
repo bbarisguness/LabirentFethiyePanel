@@ -20,6 +20,7 @@ import { DistanceRulerAdd } from 'services/distanceRulerServices';
 import { openSnackbar } from 'api/snackbar';
 import UploadMultiFile from 'components/third-party/dropzone/MultiFile';
 import { PhotoPost, Upload } from 'services/photoService';
+import Loader from 'components/Loader';
 
 
 const getInitialValues = () => {
@@ -30,8 +31,10 @@ const getInitialValues = () => {
     return newDistanceRuler;
 };
 
-export default function FormPhotoAdd({ closeModal, setIsEdit }) {
+export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoading }) {
     const params = useParams();
+
+    const [uploadLoading, setUploadLoading] = useState(false);
 
     const validationSchema = Yup.object({
         files: Yup.mixed().required('Lütfen Resim Seçiniz.')
@@ -43,103 +46,49 @@ export default function FormPhotoAdd({ closeModal, setIsEdit }) {
         enableReinitialize: true,
         onSubmit: async (values, { setSubmitting }) => {
             try {
-
-                //console.log(values);
-
-                // formik.values.villa = { connect: [params.id] };
-                // const formData = new FormData();
-                // formik.values.files.forEach((file) => formData.append('files', file));
-
-        
-
-//console.log(values.files);
-
                 let fd = new FormData();
+                formik.values.files.forEach((file) => { fd.append('files', file); });
+                var indexLenght = 0;
 
-                formik.values.files.forEach((file) => {fd.append('files', file); console.log(file);} );
+                setUploadLoading(true);
+                Upload(fd).then((res) => {
 
-                console.log(fd);
+                    res.map((img, index) => {
 
-                //var indexLenght = 0;
-                // Upload(formData).then((res) => {
+                        const imgJson = {
+                            data: {
+                                name: img.name,
+                                line: (lastLine && lastLine + (index + 1)) || (index + 1),
+                                photo: img.id,
+                                villa: { connect: [params.id] }
+                            }
+                        };
 
-                //     res.data.map((img, index) => {
+                        PhotoPost(imgJson).then((ress) => {
+                            indexLenght = index + 1;
+                            if (res.length === indexLenght) {
+                                openSnackbar({
+                                    open: true,
+                                    message: 'Resimler Eklendi',
+                                    anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+                                    variant: 'alert',
+                                    alert: {
+                                        color: 'success'
+                                    }
+                                });
+                                setSubmitting(false);
+                                setIsEdit(true);
+                                setLoading(true);
+                                setUploadLoading(false)
+                                closeModal();
+                            }
+                        });
 
-                //         const imgJson = {
-                //             data: {
-                //                 name: img.name,
-                //                 line: (lastLine && lastLine + (index + 1)) || (index + 1),
-                //                 photo: img.id,
-                //                 villa: { connect: [params.id] }
-                //             }
-                //         };
+                    });
 
-                //         console.log("imgJson => ", imgJson);
+                });
 
-                //         PhotoPost(imgJson).then((ress) => {
-                //             indexLenght = index + 1;
-                //             if (res.data.length === indexLenght) {
-                //                 openSnackbar({
-                //                     open: true,
-                //                     message: 'Resimler Eklendi',
-                //                     anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-                //                     variant: 'alert',
-                //                     alert: {
-                //                         color: 'success'
-                //                     }
-                //                 });
-                //                 setSubmitting(false);
-                //                 closeModal();
-                //             }
-                //           });
 
-                //         //console.log('döngü => ' + index);
-                //         // apiRequest('POST', `/photos`, imgJson).then((ress) => {
-                //         //   indexLenght = index + 1;
-                //         //   if (res.data.length === indexLenght) {
-                //         //     setAddPhotoLoading(true);
-                //         //     onCancel();
-                //         //   }
-                //         // });
-
-                //     });
-
-                // })
-
-                // DistanceRulerAdd({
-                //     data: {
-                //         name: values.name,
-                //         value: values.value,
-                //         icon: values.icon,
-                //         villa: values.villa
-                //     }
-                // }).then((res) => {
-                //     setIsEdit(true);
-                //     if (!res?.error) {
-                //         openSnackbar({
-                //             open: true,
-                //             message: 'Mesafe Eklendi',
-                //             anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-                //             variant: 'alert',
-                //             alert: {
-                //                 color: 'success'
-                //             }
-                //         });
-                //     }
-                //     else {
-                //         openSnackbar({
-                //             open: true,
-                //             message: res?.error?.message,
-                //             anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-                //             variant: 'alert',
-                //             alert: {
-                //                 color: 'error'
-                //             }
-                //         });
-                //     }
-                //     setSubmitting(false);
-                //     closeModal();
-                // })
             } catch (error) {
                 // console.error(error);
             }
@@ -148,6 +97,9 @@ export default function FormPhotoAdd({ closeModal, setIsEdit }) {
 
     const { values, handleSubmit, setFieldValue, touched, errors, isSubmitting } = formik;
     const [list, setList] = useState(false);
+
+    if (uploadLoading) return (<Loader open={uploadLoading} />)
+
     return (
         <>
             <FormikProvider value={formik}>
@@ -155,6 +107,7 @@ export default function FormPhotoAdd({ closeModal, setIsEdit }) {
                     <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
                         <DialogTitle>Resim Yükle</DialogTitle>
                         <Divider />
+
                         <DialogContent sx={{ p: 2.5 }}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
@@ -184,6 +137,7 @@ export default function FormPhotoAdd({ closeModal, setIsEdit }) {
                                 </Stack>
                             </Grid>
                         </DialogActions>
+
                     </Form>
                 </LocalizationProvider>
             </FormikProvider >

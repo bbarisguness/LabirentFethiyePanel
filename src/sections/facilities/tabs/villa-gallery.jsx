@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Box, Button, Grid, Stack } from '@mui/material';
+import { Box, Button, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 
 // third-party
 
@@ -11,9 +11,10 @@ import { useParams } from 'react-router';
 import { GetPhotos, PhotoPut } from 'services/photoService';
 import { ReactSortable } from 'react-sortablejs';
 import Loader from 'components/Loader';
-import { Add, ArrangeHorizontal, CloudChange } from 'iconsax-react';
+import { Add, ArrangeHorizontal, CloudChange, Trash } from 'iconsax-react';
 import { openSnackbar } from 'api/snackbar';
 import PhotoModal from 'sections/photoSections/PhotoModal';
+import PhotoModalDelete from 'sections/photoSections/PhotoModalDelete';
 const CustomComponent = forwardRef < HTMLDivElement > ((props, ref) => {
   return <div ref={ref}>{props.children}</div>;
 });
@@ -27,11 +28,14 @@ export default function VillaGallerySection() {
   const [loading, setLoading] = useState(true);
   const [photoModal, setPhotoModal] = useState(false)
   const [isEdit, setIsEdit] = useState(true);
+  const [photoDeleteId, setPhotoDeleteId] = useState('');
+  const [photoModalDelete, setPhotoModalDelete] = useState(false);
+
 
   useEffect(() => {
-    if (params.id > 0 && loading && lineChangeLoading)
-      GetPhotos(params.id).then((res) => { setPhoto(res.data); setPhotoList(res.data); setLoading(false); setLineChangeLoading(false) })
-  }, [loading, lineChangeLoading])
+    if ((params.id > 0 && loading) || lineChangeLoading || isEdit)
+      GetPhotos(params.id).then((res) => { setPhoto(res.data); setPhotoList(res.data); setLoading(false); setLineChangeLoading(false); setIsEdit(false) })
+  }, [loading, lineChangeLoading, isEdit])
 
   const handeLineSave = () => {
     setLoading(true)
@@ -66,6 +70,10 @@ export default function VillaGallerySection() {
 
   };
 
+  const handleClose = () => {
+    setPhotoModalDelete(!photoModalDelete);
+  };
+
   if (loading) return (<Loader open={loading} />)
   return (
     <Grid container spacing={3}>
@@ -95,9 +103,25 @@ export default function VillaGallerySection() {
                     {photo.map((item, index) => (
                       <div style={{ width: '160px', height: '170px', float: 'left', margin: '10px' }} key={item.attributes.line} data-index={index}>
                         <img src={item.attributes.photo.data.attributes.url} width={160} height={140} style={{ border: '3px solid #999696' }} />
-                        <span style={{ float: 'left', lineHeight: '16px' }}>[id: {item.id}] - </span>
+                        <Stack direction="row" spacing={0}>
+                          <Tooltip title="Delete">
+                            <IconButton
+                              color="error"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleClose();
+                                setPhotoDeleteId(Number(item.id));
+                                console.log("photoId => ", Number(item.id));
+                              }}
+                            >
+                              <Trash />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+
+                        {/* <span style={{ float: 'left', lineHeight: '16px' }}>[id: {item.id}] - </span>
                         <span style={{ float: 'left', lineHeight: '16px' }}>[index: {index}] - </span>
-                        <span style={{ float: 'left', lineHeight: '16px' }}>[line: {item.attributes.line}]</span>
+                        <span style={{ float: 'left', lineHeight: '16px' }}>[line: {item.attributes.line}]</span> */}
 
                       </div>
                     ))}
@@ -105,8 +129,9 @@ export default function VillaGallerySection() {
                 )}
 
               </Grid>
+              <PhotoModalDelete setIsEdit={setIsEdit} id={Number(photoDeleteId)} title={photoDeleteId} open={photoModalDelete} handleClose={handleClose} />
 
-              <PhotoModal open={photoModal} modalToggler={setPhotoModal} villaId={params.id} setIsEdit={setIsEdit} />
+              <PhotoModal open={photoModal} modalToggler={setPhotoModal} villaId={params.id} setIsEdit={setIsEdit} lastLine={photo[photoList.length - 1]?.attributes.line} setLoading={setLoading} />
 
             </MainCard>
           </Grid>
