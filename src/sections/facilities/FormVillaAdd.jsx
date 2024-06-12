@@ -67,7 +67,7 @@ export default function FormVillaAdd() {
     initialValues: getInitialValues(),
     validationSchema: VillaSchema,
     enableReinitialize: true,
-    onSubmit: async (values, { setSubmitting }) => {         
+    onSubmit: async (values, { setSubmitting }) => {
       try {
 
         values.slug = values.name
@@ -88,7 +88,7 @@ export default function FormVillaAdd() {
 
         values.categories
 
-        await VillaAdd(data).then(() => {
+        await VillaAdd(data).then((res) => {
           openSnackbar({
             open: true,
             message: 'Yeni Villa Eklendi.',
@@ -99,7 +99,7 @@ export default function FormVillaAdd() {
             }
           });
           setSubmitting(false);
-          navigate('/facilities/villa-show');
+          navigate(`/facilities/villas-show/summary/${res?.data?.id}`);
         });
       } catch (error) {
         // console.error(error);
@@ -132,29 +132,29 @@ export default function FormVillaAdd() {
               <Grid item xs={12} md={12}>
                 <Grid container spacing={3}>
                   <Grid item xs={6}>
-                  <Stack spacing={1}>
-                    <InputLabel htmlFor="villa-name">Villa Adı</InputLabel>
-                    <TextField
-                      fullWidth
-                      id="villa-name"
-                      placeholder="Villa Adı"
-                      {...getFieldProps('name')}
-                      error={Boolean(touched.name && errors.name)}
-                      helperText={touched.name && errors.name}
-                    />
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="villa-name">Villa Adı</InputLabel>
+                      <TextField
+                        fullWidth
+                        id="villa-name"
+                        placeholder="Villa Adı"
+                        {...getFieldProps('name')}
+                        error={Boolean(touched.name && errors.name)}
+                        helperText={touched.name && errors.name}
+                      />
                     </Stack>
                   </Grid>
                   <Grid item xs={6}>
-                  <Stack spacing={1}>
-                    <InputLabel htmlFor="villa-region">Bölge</InputLabel>
-                    <TextField
-                      fullWidth
-                      id="villa-region"
-                      placeholder="Bölge"
-                      {...getFieldProps('region')}
-                      error={Boolean(touched.region && errors.region)}
-                      helperText={touched.region && errors.region}
-                    />
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="villa-region">Bölge</InputLabel>
+                      <TextField
+                        fullWidth
+                        id="villa-region"
+                        placeholder="Bölge"
+                        {...getFieldProps('region')}
+                        error={Boolean(touched.region && errors.region)}
+                        helperText={touched.region && errors.region}
+                      />
                     </Stack>
                   </Grid>
 

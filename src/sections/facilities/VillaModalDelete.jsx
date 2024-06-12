@@ -15,14 +15,13 @@ import { VillaRemove } from 'services/villaServices';
 export default function VillaModalDelete({ id, title, open, handleClose, setLoading, setIsDeleted }) {
   const deletehandler = async () => {
     setLoading(true)
-
     await VillaRemove(id).then((res) => {
       setIsDeleted(true);
       if (!res?.error) {
         openSnackbar({
           open: true,
-          message: 'Customer deleted successfully',
-          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          message: 'Villa silindi.',
+          anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
           variant: 'alert',
 
           alert: {

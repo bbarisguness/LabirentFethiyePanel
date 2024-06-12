@@ -10,12 +10,10 @@ import { openSnackbar } from 'api/snackbar';
 // assets
 import { Trash } from 'iconsax-react';
 import { PriceRemove } from 'services/priceServices';
-import { DistanceRulerRemove } from 'services/distanceRulerServices';
 
 export default function PriceModalDelete({ id, title, open, handleClose, setIsEdit }) {
   const deletehandler = async () => {
-
-    await DistanceRulerRemove(id).then((res) => {
+    await PriceRemove(id).then((res) => {
       setIsEdit(true);
       if (!res?.error) {
         openSnackbar({
@@ -40,8 +38,7 @@ export default function PriceModalDelete({ id, title, open, handleClose, setIsEd
         });
       }
       handleClose();
-    });
-
+    })
   };
 
   return (

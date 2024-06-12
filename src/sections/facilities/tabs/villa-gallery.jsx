@@ -78,9 +78,12 @@ export default function VillaGallerySection() {
                   <Button variant="contained" startIcon={<Add />} size="large">
                     Resim Ekle
                   </Button>
-                  <Button variant="contained" color='warning' startIcon={<ArrangeHorizontal />} onClick={handeLineSave} size="large">
-                    SIRALAMAYI KAYDET
-                  </Button>
+                  {
+                    photo?.length > 0 &&
+                    <Button variant="contained" color='warning' startIcon={<ArrangeHorizontal />} onClick={handeLineSave} size="large">
+                      SIRALAMAYI KAYDET
+                    </Button>
+                  }
                 </Stack>
               </Stack>
               <Grid container spacing={1.25}>
