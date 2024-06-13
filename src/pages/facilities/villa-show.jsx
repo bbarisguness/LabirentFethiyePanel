@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react';
-import { useLocation, Link, Outlet, useParams } from 'react-router-dom';
+import { useLocation, Link, Outlet, useParams, useNavigate } from 'react-router-dom';
 
 
 // material-ui
@@ -16,12 +16,14 @@ import { APP_DEFAULT_PATH } from 'config';
 // assets
 import { Profile, Calendar, DollarCircle, Image, Folder, ClipboardText, ArchiveTick } from 'iconsax-react';
 import { GetVilla, GetVillaName } from 'services/villaServices';
+import { Button, Grid } from '@mui/material';
 
 // ==============================|| PROFILE - ACCOUNT ||============================== //
 
 export default function VillaShow() {
     const { pathname } = useLocation();
     const params = useParams();
+    const navigate = useNavigate()
 
     let selectedTab = 0;
     let breadcrumbTitle = '';
@@ -35,7 +37,7 @@ export default function VillaShow() {
     else if (pathname.indexOf('available-date') != -1) {
         selectedTab = 2;
     }
-     else if (pathname.indexOf('price') != -1) {
+    else if (pathname.indexOf('price') != -1) {
         selectedTab = 3;
     } else if (pathname.indexOf('content') != -1) {
         selectedTab = 4;
@@ -116,7 +118,7 @@ export default function VillaShow() {
         }
     }, [pathname]);
 
-    
+
 
     useEffect(() => {
         if (params.id > 1)
@@ -128,6 +130,9 @@ export default function VillaShow() {
     return (
         <>
             <Breadcrumbs custom links={breadcrumbLinks} />
+            <Grid style={{ marginBottom: '10px' }} container justifyContent="flex-end" alignItems="normal">
+                <Button onClick={() => navigate(`/facilities/villas-update/${params.id}`)} size='small' type="button" variant="contained">GÜNCELLE</Button>
+            </Grid>
             <MainCard border={false}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
                     <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab">
