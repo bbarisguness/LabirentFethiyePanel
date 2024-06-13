@@ -62,7 +62,7 @@ function ReactTable({ data, columns, pagination, setPagination, setSorting, sort
 
 
     return (
-        <>           
+        <>
             <MainCard content={false}>
                 <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ padding: 3 }}>
                     <DebouncedInput
@@ -226,10 +226,6 @@ export default function VillasList() {
                 cell: ({ row }) => { return row.original.attributes.person }
             },
             {
-                header: 'Oda Sayısı',
-                cell: ({ row }) => { return row.original.attributes.room }
-            },
-            {
                 header: 'Online Rez.',
                 accessorKey: 'attributes.onlineReservation',
                 cell: (cell) => {
@@ -244,6 +240,14 @@ export default function VillasList() {
                     //     default:
                     //         return <Chip color="info" label="Pending" size="small" variant="light" />;
                     // }
+                }
+            },
+            {
+                header: 'Durum',
+                accessorKey: 'attributes.publishedAt',
+                cell: (cell) => {
+                    if (cell.getValue()) return <Chip color="success" label="Aktif" size="small" variant="light" />;
+                    else return <Chip color="error" label="Pasif" size="small" variant="light" />;
                 }
             },
             {
@@ -301,7 +305,7 @@ export default function VillasList() {
 
     return (
         <>
-         <Breadcrumbs custom links={breadcrumbLinks} />
+            <Breadcrumbs custom links={breadcrumbLinks} />
             <ReactTable
                 {...{
                     data,

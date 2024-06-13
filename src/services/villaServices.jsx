@@ -2,7 +2,7 @@
 import { get, post, put, remove } from './request'
 import * as qs from 'qs'
 
-const Villas = (page, size, sort = true, fieldName = 'id', filter) => get(`/api/villas?sort=${fieldName}:${sort ? 'desc' : 'asc'}&filters[name][$containsi]=${filter}&pagination[page]=${page}&pagination[pageSize]=${size}`)
+const Villas = (page, size, sort = true, fieldName = 'id', filter) => get(`/api/villas?sort=${fieldName}:${sort ? 'desc' : 'asc'}&publicationState=preview&filters[name][$containsi]=${filter}&pagination[page]=${page}&pagination[pageSize]=${size}`)
 const GetVillaName = (id) => get(`/api/villas/${id}?fields=name`)
 const GetVilla = (id) => get(`/api/villas/${id}?populate[photos][sort]=line:asc&populate[photos][populate][0]=photo&populate[reservations][populate][reservation_infos][filters][owner][$eq]=true&populate[reservations][sort][0]=createdAt:desc`)
 const GetVillaDetail = (id) => get(`/api/villas/${id}?populate[0]=categories`)
