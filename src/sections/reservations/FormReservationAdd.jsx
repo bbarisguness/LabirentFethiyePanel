@@ -225,7 +225,34 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                     return;
                 }
                 VillaGetPriceForReservation(params.id, dateToString(date1), dateToString(date2)).then((res) => {
-                    if (res?.data?.length === 0) {
+                    var fakeDate = new Date(moment(date1).format('YYYY-MM-DD'));
+                    var days = [];
+                    res.data.map((priceDate) => {
+                        while (fakeDate >= new Date(priceDate.attributes.checkIn) && fakeDate <= new Date(priceDate.attributes.checkOut)) {
+                            if (fakeDate >= new Date(moment(date2).format('YYYY-MM-DD'))) break;
+                            days.push({ date: moment(fakeDate).format('YYYY-MM-DD'), price: priceDate.attributes.price });
+                            fakeDate.setDate(fakeDate.getDate() + 1);
+                        }
+                    });
+                    var toplam = 0;
+                    var rezItem = [];
+                    for (var i = 0; i < days.length; i++) {
+                        toplam = toplam + Number(days[i].price);
+                        rezItem.push({ day: days[i].date, price: days[i].price });
+                    }
+                    setReservationItem(rezItem);
+
+                    let time1 = date1.getTime();
+                    let time2 = date2.getTime();
+
+                    let timeDifference = Math.abs(time2 - time1);
+                    let dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+                    if (toplam > 0 && (rezItem.length === parseInt(dayDifference))) {
+                        setFieldValue('amount', toplam);
+                        setIsAvailable(true);
+                        setLoading(false);
+                    } else {
                         openSnackbar({
                             open: true,
                             message: 'Seçtiğiniz tarihlerde fiyat bilgisi bulunamadı.',
@@ -234,28 +261,6 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                                 color: 'error'
                             }
                         });
-                        setLoading(false);
-                    } else {
-                        var fakeDate = new Date(moment(date1).format('YYYY-MM-DD'));
-                        var days = [];
-                        res.data.map((priceDate) => {
-                            while (fakeDate >= new Date(priceDate.attributes.checkIn) && fakeDate <= new Date(priceDate.attributes.checkOut)) {
-                                if (fakeDate >= new Date(moment(date2).format('YYYY-MM-DD'))) break;
-                                days.push({ date: moment(fakeDate).format('YYYY-MM-DD'), price: priceDate.attributes.price });
-                                fakeDate.setDate(fakeDate.getDate() + 1);
-                            }
-                        });
-                        var toplam = 0;
-                        var rezItem = [];
-                        for (var i = 0; i < days.length; i++) {
-                            toplam = toplam + Number(days[i].price);
-                            rezItem.push({ day: days[i].date, price: days[i].price });
-                        }
-                        setReservationItem(rezItem);
-                        if (toplam > 0) {
-                            setFieldValue('amount', toplam);
-                            setIsAvailable(true);
-                        }
                         setLoading(false);
                     }
                 })
