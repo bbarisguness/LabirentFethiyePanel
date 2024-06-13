@@ -208,6 +208,7 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                         color: 'error'
                     }
                 });
+                setLoading(false)
                 return;
             }
             VillaIsAvailible(params.id, dateToString(date1), dateToString(date2)).then((res) => {
@@ -224,27 +225,39 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                     return;
                 }
                 VillaGetPriceForReservation(params.id, dateToString(date1), dateToString(date2)).then((res) => {
-                    var fakeDate = new Date(moment(date1).format('YYYY-MM-DD'));
-                    var days = [];
-                    res.data.map((priceDate) => {
-                        while (fakeDate >= new Date(priceDate.attributes.checkIn) && fakeDate <= new Date(priceDate.attributes.checkOut)) {
-                            if (fakeDate >= new Date(moment(date2).format('YYYY-MM-DD'))) break;
-                            days.push({ date: moment(fakeDate).format('YYYY-MM-DD'), price: priceDate.attributes.price });
-                            fakeDate.setDate(fakeDate.getDate() + 1);
+                    if (res?.data?.length === 0) {
+                        openSnackbar({
+                            open: true,
+                            message: 'Seçtiğiniz tarihlerde fiyat bilgisi bulunamadı.',
+                            variant: 'alert',
+                            alert: {
+                                color: 'error'
+                            }
+                        });
+                        setLoading(false);
+                    } else {
+                        var fakeDate = new Date(moment(date1).format('YYYY-MM-DD'));
+                        var days = [];
+                        res.data.map((priceDate) => {
+                            while (fakeDate >= new Date(priceDate.attributes.checkIn) && fakeDate <= new Date(priceDate.attributes.checkOut)) {
+                                if (fakeDate >= new Date(moment(date2).format('YYYY-MM-DD'))) break;
+                                days.push({ date: moment(fakeDate).format('YYYY-MM-DD'), price: priceDate.attributes.price });
+                                fakeDate.setDate(fakeDate.getDate() + 1);
+                            }
+                        });
+                        var toplam = 0;
+                        var rezItem = [];
+                        for (var i = 0; i < days.length; i++) {
+                            toplam = toplam + Number(days[i].price);
+                            rezItem.push({ day: days[i].date, price: days[i].price });
                         }
-                    });
-                    var toplam = 0;
-                    var rezItem = [];
-                    for (var i = 0; i < days.length; i++) {
-                        toplam = toplam + Number(days[i].price);
-                        rezItem.push({ day: days[i].date, price: days[i].price });
+                        setReservationItem(rezItem);
+                        if (toplam > 0) {
+                            setFieldValue('amount', toplam);
+                            setIsAvailable(true);
+                        }
+                        setLoading(false);
                     }
-                    setReservationItem(rezItem);
-                    if (toplam > 0) {
-                        setFieldValue('amount', toplam);
-                        setIsAvailable(true);
-                    }
-                    setLoading(false);
                 })
             })
         }
@@ -273,33 +286,47 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                         color: 'error'
                     }
                 });
+                setLoading(false)
                 return;
+            } else {
+                VillaIsAvailible(params.id, dateToString(date1), dateToString(date2)).then((res) => {
+                    if (res.data.length > 0) {
+                        openSnackbar({
+                            open: true,
+                            message: 'Seçtiğiniz Tarihlerde Tesis Müsait Değil.',
+                            variant: 'alert',
+                            alert: {
+                                color: 'error'
+                            }
+                        });
+                        setLoading(false);
+                        return;
+                    } else {
+                        console.log("date1", date1);
+                        console.log("date2", date2);
+
+
+                        const data = {
+                            data: {
+                                checkIn: moment(date1).format('YYYY-MM-DD').toString(),
+                                checkOut: moment(date2).format('YYYY-MM-DD').toString(),
+                                villa: { connect: [params.id] },
+                                reservationStatus: '120',
+                                amount: 0,
+                                total: 0,
+                                customerPaymentType: '0',
+                                homeOwner: true,
+                            }
+                        }
+
+                        AddReservation(data).then(() => {
+                            setLoading(false);
+                            setIsAdded(true)
+                            closeModal();
+                        });
+                    }
+                })
             }
-
-            // ev sahibi rezervasyonu eklenecek.
-            console.log("date1", date1);
-            console.log("date2", date2);
-
-
-            const data = {
-                data: {
-                    checkIn: moment(date1).format('YYYY-MM-DD').toString(),
-                    checkOut: moment(date2).format('YYYY-MM-DD').toString(),
-                    villa: { connect: [params.id] },
-                    reservationStatus: '120',
-                    amount: 0,
-                    total: 0,
-                    customerPaymentType: '0',
-                    homeOwner: true,
-                }
-            }
-
-            AddReservation(data).then(() => {
-                setLoading(false);
-                setIsAdded(true)
-                closeModal();
-            });
-
         }
         else {
             openSnackbar({
