@@ -163,6 +163,7 @@ export default function VillaReservationSection() {
     const [reservationModal, setReservationModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false)
     const [showAllReservation, setShowAllReservation] = useState(false)
+    const [isAdded, setIsAdded] = useState(false)
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -184,13 +185,14 @@ export default function VillaReservationSection() {
     }, [globalFilter, showAllReservation])
 
     useEffect(() => {
-        if (isDeleted) {
+        if (isDeleted || isAdded) {
             setIsDeleted(false)
+            setIsAdded(false)
             setLoading(true)
             //ReservationServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
-            ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation)
+            ReservationServices.GetReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation).then((res) => { setLoading(false); setData(res) })
         }
-    }, [isDeleted])
+    }, [isDeleted, isAdded])
 
     const columns = useMemo(
         () => [
@@ -274,7 +276,7 @@ export default function VillaReservationSection() {
                 }}
             />
 
-            <ReservationModal open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
+            <ReservationModal setIsAdded={setIsAdded} open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
         </>
     );
 }

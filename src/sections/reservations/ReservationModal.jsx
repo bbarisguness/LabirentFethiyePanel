@@ -15,17 +15,17 @@ import FormReservationAdd from './FormReservationAdd';
 
 // ==============================|| CUSTOMER ADD / EDIT ||============================== //
 
-export default function ReservationModal({ open, modalToggler, villaId }) {
+export default function ReservationModal({ open, modalToggler, villaId, setIsAdded }) {
   const { customersLoading: loading } = useGetCustomer();
 
   const closeModal = () => modalToggler(false);
 
   const customerForm = useMemo(
-    () => !loading && <FormReservationAdd villaId={villaId} closeModal={closeModal} />,
+    () => !loading && <FormReservationAdd setIsAdded={setIsAdded} villaId={villaId} closeModal={closeModal} />,
     // eslint-disable-next-line
     [loading]
   );
-  
+
   return (
     <>
       {open && (

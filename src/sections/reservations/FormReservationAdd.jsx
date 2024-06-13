@@ -63,7 +63,7 @@ const getInitialValues = () => {
 
 // ==============================|| CUSTOMER ADD / EDIT - FORM ||============================== //
 
-export default function FormReservationAdd({ villaId, closeModal }) {
+export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) {
     const theme = useTheme();
     const params = useParams();
     const [loading, setLoading] = useState(false);
@@ -296,6 +296,7 @@ export default function FormReservationAdd({ villaId, closeModal }) {
 
             AddReservation(data).then(() => {
                 setLoading(false);
+                setIsAdded(true)
                 closeModal();
             });
 
