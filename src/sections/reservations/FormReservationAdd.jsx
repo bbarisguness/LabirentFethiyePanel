@@ -32,7 +32,7 @@ import { VillaGetPriceForReservation, VillaIsAvailible } from 'services/villaSer
 import { dateToString } from 'utils/custom/dateHelpers';
 import { useNavigate, useParams } from 'react-router';
 import Loader from 'components/Loader';
-import { AddReservation, AddReservationInfo } from 'services/reservationServices';
+import { AddReservation, AddReservationInfo, AddReservationItem } from 'services/reservationServices';
 
 
 
@@ -68,6 +68,8 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
     const params = useParams();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const [reservationItem, setReservationItem] = useState([]);
 
 
     useEffect(() => {
@@ -146,13 +148,26 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                         ...values
                     }
                     AddReservation({ data }).then((res) => {
-                        setLoading(false);
-                        setSubmitting(false);
-                        closeModal();
-                        navigate(`/reservations/show/${res.data.id}`);
+                        reservationItem.map((item, i) => {
+                            const data = {
+                                data: {
+                                    day: item.day,
+                                    price: item.price,
+                                    reservation: {
+                                        connect: [res.data.id]
+                                    }
+                                }
+                            }
+                            AddReservationItem(data).then(() => { })
+                            if ((i + 1) === reservationItem.length) {
+                                setLoading(false);
+                                setSubmitting(false);
+                                closeModal();
+                                navigate(`/reservations/show/${res.data.id}`);
+                            }
+                        })
                     })
                 })
-
 
                 // if (customer) {
                 //   updateCustomer(newCustomer.id, newCustomer).then(() => {
@@ -194,7 +209,7 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
     const [date1, setDate1] = useState(null);
     const [date2, setDate2] = useState(null);
     const [isAvailable, setIsAvailable] = useState(false);
-    const [reservationItem, setReservationItem] = useState([]);
+
 
     const handleAvailible = () => {
         setLoading(true)

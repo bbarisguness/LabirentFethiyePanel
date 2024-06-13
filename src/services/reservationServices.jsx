@@ -31,6 +31,10 @@ const AddReservationInfo = (payload) =>
         `/api/reservation-infos`, payload, true
     );
 
+const AddReservationItem = (payload) => {
+    return post(`/api/reservation-items`, payload, true);
+}
+
 const GetAvailibleDate = (villaId) => {
     let newDate = new Date();
     let year = newDate.getFullYear();
@@ -39,4 +43,4 @@ const GetAvailibleDate = (villaId) => {
 
     return get(`/api/reservations?filters[$or][0][checkOut][$gte]=${year}-${month}-${day}&filters[$or][1][checkIn][$eq]=${year}-${month}-${day}&filters[reservationStatus][$ne]=110&filters[villa][id][$eq]=${villaId}&sort[0]=checkIn:asc&fields[0]=checkIn&fields[1]=checkOut&pagination[pageSize]=100&pagination[page]=1`)
 }
-export { GetReservations, GetReservation, AddReservation, AddReservationInfo, GetAvailibleDate, GetReservationsTop5 }
+export { GetReservations, GetReservation, AddReservation, AddReservationInfo, AddReservationItem, GetAvailibleDate, GetReservationsTop5 }
