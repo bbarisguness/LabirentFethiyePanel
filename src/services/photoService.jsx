@@ -29,4 +29,10 @@ const GetPhotos = (villaId) => {
 const PhotoPut = (id, payload) => put(`/api/photos/${id}`, payload, true);
 const PhotoPost = (payload) => post(`/api/photos`, payload, true);
 
-export { GetPhotos, PhotoPut, PhotoPost, Upload }
+const PhotoRemove = (id) => remove('/api/photos/' + id)
+const PhotoRemoveHard = (id) => remove('/api/upload/files/' + id)
+
+//--- /api/upload/files/:id	
+
+
+export { GetPhotos, PhotoPut, PhotoPost, Upload, PhotoRemove,PhotoRemoveHard }

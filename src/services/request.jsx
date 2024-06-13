@@ -39,7 +39,20 @@ function request(
       };
     }
 
-    if (data && method === "POST") {
+
+
+    // if(data && method === "POST" && formData){
+
+    // }
+
+    // if (data && method === "POST") {
+    //   options.body = formData ? objectToFormData(data) : JSON.stringify(data);
+    // }
+
+    if (data && method === "POST" && formData) {
+      options.body = formData ? data : JSON.stringify(data);
+    }
+    else if (data && method === "POST") {
       options.body = formData ? objectToFormData(data) : JSON.stringify(data);
     }
 
