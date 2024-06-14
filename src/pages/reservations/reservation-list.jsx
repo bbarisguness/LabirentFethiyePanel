@@ -3,7 +3,7 @@ import { useMemo, useState, Fragment, useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Chip, Divider, Stack, Button, Table, TableCell, TableBody, TableHead, TableRow, TableContainer, Typography, Box, FormControlLabel, Switch, } from '@mui/material';
+import { Chip, Divider, Stack, Button, Table, TableCell, TableBody, TableHead, TableRow, TableContainer, Typography, Box, FormControlLabel, Switch, Tooltip, IconButton, } from '@mui/material';
 
 // third-party
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
@@ -16,7 +16,7 @@ import { DebouncedInput, HeaderSort, TablePagination } from 'components/third-pa
 import { ImagePath, getImageUrl } from 'utils/getImageUrl';
 
 // assets
-import { Add } from 'iconsax-react';
+import { Add, Eye, Trash } from 'iconsax-react';
 
 // custom
 import { ReservationServices } from 'services';
@@ -24,6 +24,7 @@ import Loader from 'components/Loader';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import ReservationModal from 'sections/reservations/ReservationModal';
+import ReservationModalDelete from 'sections/reservations/ReservationModalDelete';
 
 const fallbackData = [];
 function ReactTable({ data, columns, modalToggler, pagination, setPagination, setSorting, sorting, globalFilter, setGlobalFilter, showAllReservation, setShowAllReservation }) {
@@ -164,7 +165,8 @@ export default function ReservationList() {
     const [reservationModal, setReservationModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false)
     const [showAllReservation, setShowAllReservation] = useState(false)
-
+    const [reservationDeleteId, setReservationDeleteId] = useState('');    
+    const [reservationModalDelete, setReservationModalDelete] = useState(false);
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -190,7 +192,7 @@ export default function ReservationList() {
             setIsDeleted(false)
             setLoading(true)
             //ReservationServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
-            ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, showAllReservation)
+            ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation).then((res) => { setData(res); setLoading(false); });
         }
     }, [isDeleted])
 
@@ -249,13 +251,54 @@ export default function ReservationList() {
             {
                 header: 'Tutar',
                 cell: ({ row }) => { return (row.original.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " TL") }
+            },
+            {
+                header: 'Actions',
+                meta: {
+                    className: 'cell-center'
+                },
+                disableSortBy: true,
+                cell: ({ row }) => {
+                    const collapseIcon =
+                        row.getCanExpand() && row.getIsExpanded() ? (
+                            <Add style={{ color: theme.palette.error.main, transform: 'rotate(45deg)' }} />
+                        ) : (
+                            <Eye />
+                        );
+                    return (
+                        <Stack direction="row" spacing={0}>
+                            <Tooltip title="View">
+                                <IconButton color="secondary" onClick={row.getToggleExpandedHandler()}>
+                                    {collapseIcon}
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete">
+                                <IconButton
+                                    color="error"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleClose();
+                                        setReservationDeleteId(Number(row.original.id));
+                                    }}
+                                >
+                                    <Trash />
+                                </IconButton>
+                            </Tooltip>
+                        </Stack>
+                    );
+                }
             }
         ], // eslint-disable-next-line
         [theme]
     );
 
+
+    const handleClose = () => {
+        setReservationModalDelete(!reservationModalDelete);
+    };
+
     if (loading) return (<Loader open={loading} />)
-    console.log('reservations = ', data);
+    
     return (
         <>
             <ReactTable
@@ -277,6 +320,7 @@ export default function ReservationList() {
             />
 
             <ReservationModal open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
+            <ReservationModalDelete setIsDeleted={setIsDeleted} setLoading={setLoading} id={Number(reservationDeleteId)} title={reservationDeleteId} open={reservationModalDelete} handleClose={handleClose} />
         </>
     );
 }

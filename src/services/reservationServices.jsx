@@ -61,5 +61,7 @@ const UpdateReservation = (id, payload) =>
         `/api/reservations/${id}`, payload, true
     );
 
+const ReservationRemove = (id) => remove('/api/reservations/' + id)
 
-export { GetReservations, GetReservation, AddReservation,  AddReservationItem, GetAvailibleDate, GetReservationsTop5,GetAllReservations, UpdateReservation }
+
+export { GetReservations, GetReservation, AddReservation, AddReservationItem, GetAvailibleDate, GetReservationsTop5, GetAllReservations, UpdateReservation, ReservationRemove }
