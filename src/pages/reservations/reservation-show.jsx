@@ -107,13 +107,6 @@ export default function ReservationShow() {
         }
     }, [pathname]);
 
-    
-
-    useEffect(() => {
-        if (params.id > 1)
-            GetVillaName(params.id).then((res) => setVilla(res.data))
-    }, [])
-
 
 
     return (

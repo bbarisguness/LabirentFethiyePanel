@@ -165,7 +165,6 @@ export default function ReservationList() {
     const [reservationModal, setReservationModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false)
     const [showAllReservation, setShowAllReservation] = useState(false)
-
     const [reservationDeleteId, setReservationDeleteId] = useState('');    
     const [reservationModalDelete, setReservationModalDelete] = useState(false);
 
@@ -180,7 +179,7 @@ export default function ReservationList() {
 
     useEffect(() => {
         setLoading(true)
-        ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation).then((res) => { setData(res); setLoading(false); });
+        ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, showAllReservation).then((res) => { setData(res); setLoading(false); });
     }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter, showAllReservation]);
 
 
