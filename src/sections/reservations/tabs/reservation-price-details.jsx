@@ -49,7 +49,7 @@ export default function ReservationPriceDetailSection() {
                         {data && data.map((item,index) => {
                             return (<TableRow hover key={index}>
                                 <TableCell align="left">{item.attributes.day}</TableCell>
-                                <TableCell align="left">{item.attributes.price} TL</TableCell>
+                                <TableCell align="left">{item.attributes.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</TableCell>
                             </TableRow>);
                         }
                         )}

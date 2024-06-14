@@ -212,7 +212,7 @@ export default function VillaContentSection() {
                                                     <TableRow hover key={row.id}>
                                                         <TableCell align="left">{row.attributes.name}</TableCell>
                                                         <TableCell align="left">{row.attributes.description}</TableCell>
-                                                        <TableCell align="left">{row.attributes.price}</TableCell>
+                                                        <TableCell align="left">{row.attributes.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</TableCell>
                                                         <TableCell sx={{ pr: 3 }} align="right">
                                                             <Stack direction="row" spacing={0}>
                                                                 <Tooltip title="Delete">

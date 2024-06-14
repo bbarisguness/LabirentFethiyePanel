@@ -81,7 +81,7 @@ export default function ReservationSummarySection() {
                                     <b> GENEL TOPLAM</b>
                                 </TableCell>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer', backgroundColor: '#F5E7D3' }} component="th" scope="row">
-                                    : <b>{reservation.attributes.total} TL </b>
+                                    : <b>{reservation.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL </b>
                                 </TableCell>
                             </TableRow>
                             <TableRow hover /*onClick={() => navigate('/villa/show/' + row.id + '/summary')}*/>
@@ -97,7 +97,7 @@ export default function ReservationSummarySection() {
                                 <TableCell sx={{ pl: 3, cursor: 'pointer', backgroundColor: '#F5B82A' }} component="th" scope="row">
                                     :{' '}
                                     <b>
-                                        {reservation.attributes.payments?.data.reduce((a, v) => (a = a + v?.attributes.amount), 0)}{' '}
+                                        {reservation.attributes.payments?.data.reduce((a, v) => (a = a + v?.attributes.amount), 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{' '}
                                         TL
                                     </b>
                                 </TableCell>
@@ -117,11 +117,7 @@ export default function ReservationSummarySection() {
                                 <TableCell sx={{ pl: 3, cursor: 'pointer', backgroundColor: '#83D4A9' }} component="th" scope="row">
                                     :{' '}
                                     <b style={{}}>
-                                        {reservation.attributes.total -
-                                            reservation.attributes.payments?.data.reduce(
-                                                (a, v) => (a = a + v?.attributes.amount),
-                                                0
-                                            )}{' '}
+                                        {(reservation.attributes.total - reservation.attributes.payments?.data.reduce((a, v) => (a = a + v?.attributes.amount),0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{' '}
                                         TL
                                     </b>
                                 </TableCell>
@@ -182,7 +178,7 @@ export default function ReservationSummarySection() {
                                     Toplam
                                 </TableCell>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
-                                    : <b>{reservation.attributes.amount} TL</b>
+                                    : <b>{reservation.attributes.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</b>
                                 </TableCell>
                             </TableRow>
 
@@ -191,7 +187,7 @@ export default function ReservationSummarySection() {
                                     İndirim
                                 </TableCell>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
-                                    : <b>{reservation.attributes.discount} TL</b>
+                                    : <b>{reservation.attributes.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</b>
                                 </TableCell>
                             </TableRow>
 
@@ -200,7 +196,7 @@ export default function ReservationSummarySection() {
                                     Genel Toplam
                                 </TableCell>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
-                                    : <b>{reservation.attributes.total} TL</b>
+                                    : <b>{reservation.attributes.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</b>
                                 </TableCell>
                             </TableRow>
                             <TableRow hover /*onClick={() => navigate('/villa/show/' + row.id + '/summary')}*/>
