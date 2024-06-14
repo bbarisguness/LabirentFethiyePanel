@@ -14,51 +14,76 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import { openSnackbar } from 'api/snackbar';
 import ReactQuill from 'react-quill';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 // assets
 import { CloseCircle } from 'iconsax-react';
 import { Categories } from 'services/categoryServices';
 import 'react-quill/dist/quill.snow.css';
-import { VillaAdd } from 'services/villaServices';
+import { GetVillaDetail, VillaAdd, VillaUpdate } from 'services/villaServices';
 
 // CONSTANT
-const getInitialValues = () => {
+const getInitialValues = (villa) => {
+  const [defaultCategoriesId, setDefaultCategoriesId] = useState([])
+
+  useEffect(() => {
+    villa?.attributes?.categories?.data?.map((item) => {
+      setDefaultCategoriesId(prevValues => [...prevValues, item?.id]);
+    })
+  }, [villa])
+
   const newVilla = {
-    slug: '',
-    name: '',
-    room: 0,
-    bath: 0,
-    person: 0,
-    featureTextRed: '',
-    featureTextBlue: '',
-    featureTextWhite: '',
-    wifiPassword: '',
-    waterMaterNumber: '',
-    electricityMeterNumber: '',
-    internetMeterNumber: '',
-    googleMap: '',
-    region: '',
-    descriptionShort: '',
-    descriptionLong: '',
-    onlineReservation: false,
-    categories: [],
-    metaTitle: '',
-    metaDescription: '',
-    video: ''
+    slug: villa?.attributes?.slug || '',
+    name: villa?.attributes?.name || '',
+    room: villa?.attributes?.room || 0,
+    bath: villa?.attributes?.bath || 0,
+    person: villa?.attributes?.person || 0,
+    featureTextRed: villa?.attributes?.featureTextRed || '',
+    featureTextBlue: villa?.attributes?.featureTextBlue || '',
+    featureTextWhite: villa?.attributes?.featureTextWhite || '',
+    wifiPassword: villa?.attributes?.wifiPassword || '',
+    waterMaterNumber: villa?.attributes?.waterMaterNumber || '',
+    electricityMeterNumber: villa?.attributes?.electricityMeterNumber || '',
+    internetMeterNumber: villa?.attributes?.internetMeterNumber || '',
+    googleMap: villa?.attributes?.googleMap || '',
+    region: villa?.attributes?.region || '',
+    descriptionShort: villa?.attributes?.descriptionShort || '',
+    descriptionLong: villa?.attributes?.descriptionLong || '',
+    onlineReservation: villa?.attributes?.onlineReservation || false,
+    categories: defaultCategoriesId || [],
+    metaTitle: villa?.attributes?.metaTitle || '',
+    metaDescription: villa?.attributes?.metaDescription || '',
+    video: villa?.attributes?.video || ''
   };
   return newVilla;
 };
 
-export default function FormVillaAdd() {
+export default function FormVillaUpdate() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [defaultCategories, setDefaultCategories] = useState([])
+  const [villa, setVilla] = useState([])
+  const params = useParams()
 
   useEffect(() => {
-    setLoading(false);
-    Categories().then((res) => setCategories(res));
+
+    GetVillaDetail(params.id).then((res) => {
+      setVilla(res?.data)
+      Categories().then((ress) => {
+        setCategories(ress)
+        res?.data?.attributes?.categories?.data?.map((item, i) => {
+          setDefaultCategories(prevValues => [...prevValues, item?.attributes?.name]);
+          if (res?.data?.attributes?.categories?.data.length === (i + 1)) {
+            setLoading(false);
+          }
+        })
+      });
+
+    })
+
   }, []);
+
 
   const VillaSchema = Yup.object().shape({
     name: Yup.string().max(255).required('Lütfen villa adı yazınız..'),
@@ -71,43 +96,42 @@ export default function FormVillaAdd() {
   });
 
   const formik = useFormik({
-    initialValues: getInitialValues(),
+    initialValues: getInitialValues(villa),
     validationSchema: VillaSchema,
     enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-
-        values.slug = values.name
-          .toString()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/[^\w-]+/g, '')
-          .replace(/--+/g, '-');
-
         const data = {
           data: {
             ...values
           }
         }
 
-        values.categories
+        await VillaUpdate(params.id, data).then((res) => {
+          if (res?.error) {
+            openSnackbar({
+              open: true,
+              message: res?.error?.message,
+              variant: 'alert',
 
-        await VillaAdd(data).then((res) => {
-          openSnackbar({
-            open: true,
-            message: 'Yeni Villa Eklendi.',
-            variant: 'alert',
+              alert: {
+                color: 'errorr'
+              }
+            });
+          } else {
+            openSnackbar({
+              open: true,
+              message: 'Villa Güncellendi.',
+              variant: 'alert',
 
-            alert: {
-              color: 'success'
-            }
-          });
-          setSubmitting(false);
-          navigate(`/facilities/villas-show/summary/${res?.data?.id}`);
-        });
+              alert: {
+                color: 'success'
+              }
+            });
+            navigate(`/facilities/villas-show/summary/${res?.data?.id}`);
+          }
+        })
+        setSubmitting(false)
       } catch (error) {
         // console.error(error);
       }
@@ -168,53 +192,57 @@ export default function FormVillaAdd() {
                   <Grid item xs={12}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="categories">Kategori</InputLabel>
+                      {
+                        defaultCategories.length > 0 &&
 
-                      <Autocomplete
-                        id="categories"
-                        multiple
-                        fullWidth
-                        autoHighlight
-                        freeSolo
-                        disableCloseOnSelect
-                        options={categories?.data?.map((item) => item?.attributes?.name) || []}
-                        getOptionLabel={(option) => option}
-                        onChange={(event, newValue) => {
-                          var x = [];
-                          categories?.data?.map(function (item) {
-                            if (newValue.includes(item.attributes.name)) {
-                              x.push(item.id);
-                            }
-                          });
-                          setFieldValue('categories', x);
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            name="categories"
-                            placeholder="Kategori Seç"
-                            error={touched.categories && Boolean(errors.categories)}
-                          />
-                        )}
-                        renderTags={(value, getTagProps) =>
-                          value.map((option, index) => {
-                            let error = false;
-                            if (touched.categories && errors.categories && typeof errors.categories !== 'string') {
-                              if (typeof errors.categories[index] === 'object') error = true;
-                            }
+                        <Autocomplete
+                          id="categories"
+                          multiple
+                          fullWidth
+                          autoHighlight
+                          freeSolo
+                          disableCloseOnSelect
+                          defaultValue={defaultCategories}
+                          options={categories?.data?.map((item) => item?.attributes?.name) || []}
+                          getOptionLabel={(option) => option}
+                          onChange={(event, newValue) => {
+                            var x = [];
+                            categories?.data?.map(function (item) {
+                              if (newValue.includes(item.attributes.name)) {
+                                x.push(item.id);
+                              }
+                            });
+                            setFieldValue('categories', x);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              name="categories"
+                              placeholder="Kategori Seç"
+                              error={touched.categories && Boolean(errors.categories)}
+                            />
+                          )}
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => {
+                              let error = false;
+                              if (touched.categories && errors.categories && typeof errors.categories !== 'string') {
+                                if (typeof errors.categories[index] === 'object') error = true;
+                              }
 
-                            return (
-                              <Chip
-                                {...getTagProps({ index })}
-                                variant="combined"
-                                key={index}
-                                label={option}
-                                deleteIcon={<CloseCircle style={{ fontSize: '0.75rem' }} />}
-                                sx={{ color: 'text.primary' }}
-                              />
-                            );
-                          })
-                        }
-                      />
+                              return (
+                                <Chip
+                                  {...getTagProps({ index })}
+                                  variant="combined"
+                                  key={index}
+                                  label={option}
+                                  deleteIcon={<CloseCircle style={{ fontSize: '0.75rem' }} />}
+                                  sx={{ color: 'text.primary' }}
+                                />
+                              );
+                            })
+                          }
+                        />
+                      }
                     </Stack>
                   </Grid>
 
@@ -347,7 +375,7 @@ export default function FormVillaAdd() {
 
                   <Grid item xs={12}>
                     <InputLabel htmlFor="longDescription">Genel Açıklama</InputLabel>
-                    <ReactQuill style={{ height: '400px', marginBottom: '40px' }} onChange={handleChangeEditor} />
+                    <ReactQuill style={{ height: '400px', marginBottom: '40px' }} defaultValue={formik.values.descriptionLong} onChange={handleChangeEditor} />
                   </Grid>
 
 
@@ -402,7 +430,7 @@ export default function FormVillaAdd() {
                     <Typography variant="caption" color="text.secondary">
                       Tesisinize Online (Anlık) Rezervasyon Kabul Ediyormusunuz?
                     </Typography>
-                    <FormControlLabel control={<Switch sx={{ mt: 0 }} />} label="" labelPlacement="start" onChange={() => { setFieldValue('onlineReservation', !getFieldProps('onlineReservation').value) }} />
+                    <FormControlLabel control={<Switch sx={{ mt: 0 }} />} label="" checked={formik.values.onlineReservation} labelPlacement="start" onChange={() => { setFieldValue('onlineReservation', !getFieldProps('onlineReservation').value) }} />
                   </Grid>
                 </Grid>
               </Grid>

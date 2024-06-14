@@ -41,6 +41,10 @@ const AddReservation = (payload) =>
 //         `/api/reservation-infos`, payload, true
 //     );
 
+const AddReservationItem = (payload) => {
+    return post(`/api/reservation-items`, payload, true);
+}
+
 const GetAvailibleDate = (villaId) => {
     let newDate = new Date();
     let year = newDate.getFullYear();
@@ -58,4 +62,4 @@ const UpdateReservation = (id, payload) =>
     );
 
 
-export { GetReservations, GetReservation, AddReservation,  GetAvailibleDate, GetReservationsTop5, GetAllReservations, UpdateReservation }
+export { GetReservations, GetReservation, AddReservation,  AddReservationItem, GetAvailibleDate, GetReservationsTop5,GetAllReservations, UpdateReservation }
