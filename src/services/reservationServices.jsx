@@ -6,7 +6,7 @@ const GetAllReservations = (page, size, sort = true, fieldName = 'id', filter, h
     if (!homeOwner) {
         return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&populate[villa][fields][1]=name&filters[$and][0][homeOwner][$eq]=false&filters[$and][1][reservation_infos][name][$containsi]=${filter}`);
     } else {
-        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&populate[villa][fields][1]=name&filters[$and][0][homeOwner][$eq]=true`);
+        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&populate[villa][fields][1]=name`);
     }
 }
 

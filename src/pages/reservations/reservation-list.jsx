@@ -165,6 +165,7 @@ export default function ReservationList() {
     const [isDeleted, setIsDeleted] = useState(false)
     const [showAllReservation, setShowAllReservation] = useState(false)
 
+
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10
@@ -176,7 +177,7 @@ export default function ReservationList() {
 
     useEffect(() => {
         setLoading(true)
-        ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation).then((res) => { setData(res); setLoading(false); });
+        ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, showAllReservation).then((res) => { setData(res); setLoading(false); });
     }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter, showAllReservation]);
 
 
@@ -189,7 +190,7 @@ export default function ReservationList() {
             setIsDeleted(false)
             setLoading(true)
             //ReservationServices.Villas(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter).then((res) => { setData(res); setLoading(false); });
-            ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, params.id, showAllReservation)
+            ReservationServices.GetAllReservations(pagination.pageIndex + 1, pagination.pageSize, sorting[0]?.desc, sorting[0]?.id.replace('attributes_', ''), globalFilter, showAllReservation)
         }
     }, [isDeleted])
 
