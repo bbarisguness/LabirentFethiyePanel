@@ -1,10 +1,11 @@
 // project import
 import defaults from './defaults';
 import facilities from './facilities';
+import reservations from './reservations';
 import settings from './settings';
 
 const menuItems = {
-  items: [defaults, facilities, settings]
+  items: [defaults, facilities, settings,reservations]
 };
 
 export default menuItems;

@@ -24,5 +24,9 @@
 
   "facilities-group-title":"Tesis Yönetimi",
   "facilities-villas-list-title":"Villa Yönetimi",
-  "facilities-aparts-list-title":"Apart Yönetimi"
+  "facilities-aparts-list-title":"Apart Yönetimi",
+
+  "reservations-group-title":"Rezervasyon Yönetimi",
+  "reservations-list-title":"Rezervasyon Listesi",
+  "reservations-add-title":"Rezervasyon Ekle"
 }

@@ -32,7 +32,8 @@ import { VillaGetPriceForReservation, VillaIsAvailible } from 'services/villaSer
 import { dateToString } from 'utils/custom/dateHelpers';
 import { useNavigate, useParams } from 'react-router';
 import Loader from 'components/Loader';
-import { AddReservation, AddReservationInfo } from 'services/reservationServices';
+import { AddReservation } from 'services/reservationServices';
+import { AddReservationInfo } from 'services/reservationInfoServices';
 
 
 

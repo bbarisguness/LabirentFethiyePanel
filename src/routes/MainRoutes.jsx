@@ -20,6 +20,13 @@ import VillaContent from 'pages/facilities/tabs/villa-content';
 import VillaAvailableDate from 'pages/facilities/tabs/villa-available-date';
 import AuthGuard from 'utils/route-guard/AuthGuard';
 import MainLayout from 'layout/Dashboard';
+import ReservationsList from 'pages/reservations/reservation-list';
+import ReservationAdd from 'pages/reservations/reservation-add';
+import ReservationShow from 'pages/reservations/reservation-show';
+import ReservationSummary from 'pages/reservations/tabs/reservation-summary';
+import ReservationPriceDetail from 'pages/reservations/tabs/reservation-price-details';
+import ReservationPayment from 'pages/reservations/tabs/reservation-payments';
+import ReservationCustomer from 'pages/reservations/tabs/reservation-customers';
 
 const ErrorPage = Loadable(lazy(() => import('pages/error-pages/404')));
 
@@ -84,6 +91,42 @@ const MainRoutes = {
             {
               path: 'aparts-list',
               element: <ApartsList />
+            }
+          ]
+        },        
+        {
+          path: '/reservations',
+          children: [
+            {
+              path: 'list',
+              element: <ReservationsList />
+            },
+            {
+              path: 'add',
+              element: <ReservationAdd />
+            },
+            {
+              path: 'show',
+              element: <ReservationShow />,
+              children: [
+                {
+                  path: 'summary/:id',
+                  element: <ReservationSummary />
+                },
+                {
+                  path: 'price-details/:id',
+                  element: <ReservationPriceDetail />
+                },
+                {
+                  path: 'payments/:id',
+                  //element: <VillaPrice />
+                  element: <ReservationPayment />
+                },
+                {
+                  path: 'customers/:id',
+                  element: <ReservationCustomer />
+                }
+              ]
             }
           ]
         },

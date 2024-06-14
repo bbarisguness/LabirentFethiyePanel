@@ -19,7 +19,7 @@ import { GetVilla, GetVillaName } from 'services/villaServices';
 
 // ==============================|| PROFILE - ACCOUNT ||============================== //
 
-export default function VillaShow() {
+export default function ReservationShow() {
     const { pathname } = useLocation();
     const params = useParams();
 
@@ -86,32 +86,23 @@ export default function VillaShow() {
     };
 
     let breadcrumbLinks = [
-        { title: 'Villa Yönetimi', to: '/facilities/villas-list' }
+        { title: 'Rezervasyon Yönetimi', to: '/reservations/list' }
     ];
     if (selectedTab === 0) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/summary/${params.id}` }, { title: 'Özet Bilgiler' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/summary/${params.id}` }, { title: 'Rezervasyon Bilgiler' }];
     }
     else if (selectedTab === 1) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/reservation/${params.id}` }, { title: 'Rezervasyonlar' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/price-details/${params.id}` }, { title: 'Fiyat Detayları' }];
     }
     else if (selectedTab === 2) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/available-date/${params.id}` }, { title: 'Müsait Tarihler' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/payments/${params.id}` }, { title: 'Ödemeler' }];
     }
     else if (selectedTab === 3) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/price/${params.id}` }, { title: 'Fiyatlar' }];
-    }
-    else if (selectedTab === 4) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/content/${params.id}` }, { title: 'İçerik Yönetimi' }];
-    }
-    else if (selectedTab === 5) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/gallery/${params.id}` }, { title: 'Galeri' }];
-    }
-    else if (selectedTab === 6) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/villas-list' }, { title: villa?.attributes.name, to: `/facilities/villas-show/file/${params.id}` }, { title: 'Dosyalar' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/customers/${params.id}` }, { title: 'Misafirler' }];
     }
 
     useEffect(() => {
-        if (pathname === `/facilities/villas-show/summary/${params.id}`) {
+        if (pathname === `/reservations/show/summary/${params.id}`) {
             setValue(0);
         }
     }, [pathname]);
@@ -131,37 +122,28 @@ export default function VillaShow() {
             <MainCard border={false}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
                     <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab">
-                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/villas-show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />
+                        <Tab label="Rezervasyon Bilgileri" component={Link} to={`/reservations/show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />
                         <Tab
-                            label="Rezervasyonlar"
+                            label="Fiyat Detayları"
                             component={Link}
-                            to={`/facilities/villas-show/reservation/${params.id}`}
+                            to={`/reservations/show/price-details/${params.id}`}
                             icon={<Calendar />}
                             iconPosition="start"
                         />
                         <Tab
-                            label="Müsait Tarihler"
+                            label="Ödemeler"
                             component={Link}
-                            to={`/facilities/villas-show/available-date/${params.id}`}
+                            to={`/reservations/show/payments/${params.id}`}
                             icon={<ArchiveTick />}
                             iconPosition="start"
                         />
                         <Tab
-                            label="Fiyatlar"
+                            label="Misafirler"
                             component={Link}
-                            to={`/facilities/villas-show/price/${params.id}`}
+                            to={`/reservations/show/customers/${params.id}`}
                             icon={<DollarCircle />}
                             iconPosition="start"
                         />
-                        <Tab
-                            label="İçerik Yönetimi"
-                            component={Link}
-                            to={`/facilities/villas-show/content/${params.id}`}
-                            icon={<ClipboardText />}
-                            iconPosition="start"
-                        />
-                        <Tab label="Galeri" component={Link} to={`/facilities/villas-show/gallery/${params.id}`} icon={<Image />} iconPosition="start" />
-                        <Tab label="Dosyalar" component={Link} to={`/facilities/villas-show/file/${params.id}`} icon={<Folder />} iconPosition="start" />
                     </Tabs>
                 </Box>
                 <Box sx={{ mt: 2.5 }}>

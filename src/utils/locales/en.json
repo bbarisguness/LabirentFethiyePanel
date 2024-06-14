@@ -25,6 +25,9 @@
   "facilities-group-title":"Facility Management",
   "facilities-villas-list-title":"Villa Management",
   "facilities-aparts-list-title":"Apart Management",
+  "reservations-group-title":"Reservations Management",
+  "reservations-list-title":"Reservations List",
+  "reservations-add-title":"Reservations Add",
 
   "baris":"barış"
 }
