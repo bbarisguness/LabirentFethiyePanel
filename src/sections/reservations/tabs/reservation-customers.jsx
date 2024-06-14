@@ -17,6 +17,7 @@ import { useParams } from 'react-router';
 import { GetAllReservationInfos } from 'services/reservationInfoServices';
 import ReservationCustomerModal from './reservation-customers-modal';
 import CustomerModalDelete from './reservation-customers-delete-modal';
+import ReservationCustomerUpdateModal from './reservation-customers-update-modal';
 
 export const header = [
     { label: 'Başlangıç Tarihi', key: 'name' },
@@ -33,7 +34,9 @@ export default function ReservationCustomerSection() {
     const [isDeleted, setIsDeleted] = useState(false)
     const [loading, setLoading] = useState(true);
     const [customerModal, setCustomerModal] = useState(false);
+    const [customerUpdateModal, setCustomerUpdateModal] = useState(false)
     const [customerModalDelete, setCustomerModalDelete] = useState(false);
+    const [selectedId, setSelectedId] = useState(0)
 
     const [isEdit, setIsEdit] = useState(true);
 
@@ -44,8 +47,6 @@ export default function ReservationCustomerSection() {
             GetAllReservationInfos(params.id).then((res) => { setData(res.data); setIsEdit(false); setLoading(false); })
         }
     }, [isEdit])
-
-console.log(data);
 
     // useEffect(() => {
     //     if (isDeleted) {
@@ -89,7 +90,7 @@ console.log(data);
                     </TableHead>
                     <TableBody>
                         {data && data.map((row) => (
-                            <TableRow hover key={row.id}>
+                            <TableRow style={{ cursor: 'pointer' }} onClick={(e) => { setCustomerUpdateModal(true); setSelectedId(row.id) }} hover key={row.id}>
                                 <TableCell align="left">{row.attributes.name}</TableCell>
                                 <TableCell align="left">{row.attributes.surname}</TableCell>
                                 <TableCell align="left">{row.attributes.phone}</TableCell>
@@ -120,7 +121,8 @@ console.log(data);
                 </Table>
             </TableContainer>
             <CustomerModalDelete setIsEdit={setIsEdit} id={Number(customerDeleteId)} title={customerDeleteId} open={customerModalDelete} handleClose={handleClose} />
-            <ReservationCustomerModal open={customerModal} modalToggler={setCustomerModal} setIsEdit={setIsEdit} /> 
+            <ReservationCustomerModal open={customerModal} modalToggler={setCustomerModal} setIsEdit={setIsEdit} />
+            <ReservationCustomerUpdateModal open={customerUpdateModal} id={selectedId} modalToggler={setCustomerUpdateModal} setIsEdit={setIsEdit} />
         </MainCard>
     );
 }

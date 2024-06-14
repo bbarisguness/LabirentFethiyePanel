@@ -21,6 +21,7 @@ import ReservationPaymentsModal from './reservation-payments-modal';
 import { GetAllPaymentsByReservation } from 'services/paymentServices';
 import ReservationPaymentAddForm from './reservation-payments-add-form';
 import PaymentModalDelete from './reservation-payments-delete-modal';
+import ReservationPaymentsUpdateModal from './reservation-payments-update-modal';
 
 export const header = [
     { label: 'Başlangıç Tarihi', key: 'name' },
@@ -38,6 +39,8 @@ export default function ReservationPaymentSection() {
     const [loading, setLoading] = useState(true);
     const [paymentModal, setPaymentModal] = useState(false);
     const [paymentModalDelete, setPaymentModalDelete] = useState(false);
+    const [selectedId, setSelectedId] = useState(0)
+    const [paymentUpdateModal, setPaymentUpdateModal] = useState(false)
 
     const [isEdit, setIsEdit] = useState(true);
 
@@ -76,7 +79,7 @@ export default function ReservationPaymentSection() {
         <MainCard content={false} title={
             <Button variant="contained" startIcon={<Add />} onClick={() => { setPaymentModal(true) }} size="large">
                 Ödeme Ekle
-            </Button>} >            
+            </Button>} >
             <TableContainer>
                 <Table sx={{ minWidth: 350 }} aria-label="simple table">
                     <TableHead>
@@ -90,7 +93,7 @@ export default function ReservationPaymentSection() {
                     </TableHead>
                     <TableBody>
                         {data && data.attributes.payments.data.map((row) => (
-                            <TableRow hover key={row.id}>
+                            <TableRow style={{cursor: 'pointer'}} onClick={() => { setSelectedId(row?.id); setPaymentUpdateModal(true)}} hover key={row.id}>
                                 <TableCell align="left">{row.attributes.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL</TableCell>
                                 <TableCell align="left">{row.attributes.payment_type?.data?.attributes?.title}</TableCell>
                                 <TableCell align="left">{row.attributes.description}</TableCell>
@@ -101,9 +104,9 @@ export default function ReservationPaymentSection() {
                                             <IconButton
                                                 color="error"
                                                 onClick={(e) => {
-                                                     e.stopPropagation();
-                                                     handleClose();
-                                                     setPaymentDeleteId(Number(row.id));
+                                                    e.stopPropagation();
+                                                    handleClose();
+                                                    setPaymentDeleteId(Number(row.id));
                                                 }}
                                             >
                                                 <Trash />
@@ -118,6 +121,7 @@ export default function ReservationPaymentSection() {
             </TableContainer>
             <PaymentModalDelete setIsEdit={setIsEdit} id={Number(paymentDeleteId)} title={paymentDeleteId} open={paymentModalDelete} handleClose={handleClose} />
             <ReservationPaymentsModal open={paymentModal} modalToggler={setPaymentModal} setIsEdit={setIsEdit} villaId={data.attributes.villa.data.id} />
+            <ReservationPaymentsUpdateModal open={paymentUpdateModal} modalToggler={setPaymentUpdateModal} setIsEdit={setIsEdit} id={selectedId} />
         </MainCard>
     );
 }

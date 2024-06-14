@@ -33,7 +33,6 @@ export default function ReservationPriceDetailSection() {
         setLoading(false);
         GetAllReservationItems(params.id).then((res) => { setData(res.data); setLoading(false); })
     }, [])
-    console.log(data);
     if (loading) return (<Loader open={loading} />)
     return (
         <MainCard content={false} title="">
