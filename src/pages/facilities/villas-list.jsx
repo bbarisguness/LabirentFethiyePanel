@@ -280,7 +280,7 @@ export default function VillasList() {
                                     <Edit />
                                 </IconButton>
                             </Tooltip>
-                            <Tooltip title="Delete">
+                            {/* <Tooltip title="Delete">
                                 <IconButton
                                     color="error"
                                     onClick={(e) => {
@@ -291,7 +291,7 @@ export default function VillasList() {
                                 >
                                     <Trash />
                                 </IconButton>
-                            </Tooltip>
+                            </Tooltip> */}
                         </Stack>
                     );
                 }

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { get } from './request';
+import { get, remove } from './request';
 
 
 const GetAllReservationItems = (reservationId) => {
@@ -8,6 +8,7 @@ const GetAllReservationItems = (reservationId) => {
 
 }
 
+const ReservationItemRemove = (id) => remove('/api/reservation-items/' + id)
 
 
-export { GetAllReservationItems }
+export { GetAllReservationItems,ReservationItemRemove }

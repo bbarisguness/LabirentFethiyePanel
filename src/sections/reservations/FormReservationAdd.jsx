@@ -164,7 +164,7 @@ export default function FormReservationAdd({ villaId, closeModal, setIsAdded }) 
                                 setLoading(false);
                                 setSubmitting(false);
                                 closeModal();
-                                navigate(`/reservations/show/${res.data.id}`);
+                                navigate(`/reservations/show/summary/${res.data.id}`);
                             }
                         })
                     })
