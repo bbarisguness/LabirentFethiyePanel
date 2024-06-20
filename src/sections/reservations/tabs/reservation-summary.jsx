@@ -122,7 +122,7 @@ export default function ReservationSummarySection() {
                                     </b>
                                 </TableCell>
                             </TableRow>
-                            <TableRow hover /*onClick={() => navigate('/villa/show/' + row.id + '/summary')}*/>
+                            {/* <TableRow hover>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
                                     Ödeme Türü
                                 </TableCell>
@@ -136,7 +136,7 @@ export default function ReservationSummarySection() {
                                                 : reservation.attributes.customerPaymentType === '100' && 'Kredi Kartı'}
                                     </b>
                                 </TableCell>
-                            </TableRow>
+                            </TableRow> */}
                             <TableRow hover /*onClick={() => navigate('/villa/show/' + row.id + '/summary')}*/>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
                                     Bölge

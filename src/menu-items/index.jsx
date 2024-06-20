@@ -5,7 +5,7 @@ import reservations from './reservations';
 import settings from './settings';
 
 const menuItems = {
-  items: [defaults, facilities, settings,reservations]
+  items: [defaults, facilities, reservations, settings]
 };
 
 export default menuItems;
