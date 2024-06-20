@@ -220,6 +220,22 @@ export default function ReservationList() {
                 }
             },
             {
+                header: 'Villa Adı',
+                accessorKey: 'attributes.villa.data.attributes.name',
+                cell: ({ row, getValue }) => (
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Avatar
+                            alt="Avatar"
+                            size="sm"
+                            src={getImageUrl(`avatar-${!row.original.avatar ? 1 : row.original.avatar}.png`, ImagePath.USERS)}
+                        />
+                        <Stack spacing={0}>
+                            <Typography variant="subtitle1">{getValue()}</Typography>
+                        </Stack>
+                    </Stack>
+                )
+            },
+            {
                 header: 'reservationStatus',
                 accessorKey: 'attributes.reservationStatus',
                 cell: (cell) => {

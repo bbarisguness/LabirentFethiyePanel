@@ -89,16 +89,16 @@ export default function ReservationShow() {
         { title: 'Rezervasyon Yönetimi', to: '/reservations/list' }
     ];
     if (selectedTab === 0) {
-        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/summary/${params.id}` }, { title: 'Rezervasyon Bilgiler' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: 'Rezervasyon Bilgiler' }];
     }
     else if (selectedTab === 1) {
-        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/price-details/${params.id}` }, { title: 'Fiyat Detayları' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: 'Fiyat Detayları' }];
     }
     else if (selectedTab === 2) {
-        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/payments/${params.id}` }, { title: 'Ödemeler' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: 'Ödemeler' }];
     }
     else if (selectedTab === 3) {
-        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: villa?.attributes.name, to: `/reservations/show/customers/${params.id}` }, { title: 'Misafirler' }];
+        breadcrumbLinks = [{ title: 'Rezervasyon Yönetimi', to: '/reservations/list' }, { title: 'Misafirler' }];
     }
 
     useEffect(() => {
