@@ -100,10 +100,10 @@ export default function NotificationPage() {
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard elevation={0} border={false}>
                   <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Typography variant="h5">Notifications</Typography>
-                    <Link href="#" variant="h6" color="primary">
+                    <Typography variant="h5">Bildirimler (Yakında!)</Typography>
+                    {/* <Link href="#" variant="h6" color="primary">
                       Mark all read
-                    </Link>
+                    </Link> */}
                   </Stack>
                   <List
                     component="nav"
@@ -126,100 +126,42 @@ export default function NotificationPage() {
                       <ListItemText
                         primary={
                           <Typography variant="h6">
-                            It&apos;s{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Cristina danny&apos;s
-                            </Typography>{' '}
-                            birthday today.
+                            Yeni Rezervasyon!
                           </Typography>
                         }
-                        secondary="2 min ago"
                       />
                       <ListItemSecondaryAction>
                         <Typography variant="caption" noWrap>
-                          3:00 AM
+                          15:00
                         </Typography>
                       </ListItemSecondaryAction>
                     </ListItemButton>
 
                     <ListItemButton>
                       <ListItemAvatar>
-                        <Avatar type="outlined">
-                          <MessageText1 size={20} variant="Bold" />
+                        <Avatar type="filled">
+                          <Gift size={20} variant="Bold" />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary={
                           <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Aida Burg
-                            </Typography>{' '}
-                            commented your post.
+                            Yeni Rezervasyon!
                           </Typography>
                         }
-                        secondary="5 August"
                       />
                       <ListItemSecondaryAction>
                         <Typography variant="caption" noWrap>
-                          6:00 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <Setting2 size={20} variant="Bold" />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            Your Profile is Complete &nbsp;
-                            <Typography component="span" variant="subtitle1">
-                              60%
-                            </Typography>{' '}
-                          </Typography>
-                        }
-                        secondary="7 hours ago"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          2:45 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar type="combined">C</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Cristina Danny
-                            </Typography>{' '}
-                            invited to join{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Meeting.
-                            </Typography>
-                          </Typography>
-                        }
-                        secondary="Daily scrum meeting time"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          9:10 PM
+                          17:00
                         </Typography>
                       </ListItemSecondaryAction>
                     </ListItemButton>
                   </List>
-                  <Stack direction="row" justifyContent="center">
+                  {/* <Stack direction="row" justifyContent="center">
                     <Link href="#" variant="h6" color="primary">
                       View all
                     </Link>
-                  </Stack>
+                  </Stack> */}
                 </MainCard>
               </ClickAwayListener>
             </Paper>
