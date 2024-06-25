@@ -1,6 +1,3 @@
-const user = JSON.parse(localStorage.getItem("user"));
-const serviceToken = localStorage.getItem("serviceToken");
-
 function objectToFormData(data) {
   let form_data = new FormData();
 
@@ -19,6 +16,10 @@ function request(
   formData = false
 ) {
   return new Promise(async (resolve, reject) => {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const serviceToken = localStorage.getItem("serviceToken");
+
     let response, result;
     let options = {};
 
@@ -70,12 +71,17 @@ function request(
 
     try {
       response = await fetch('http://185.59.31.233:2030' + url, options);
-      //console.log(response.body);
+      if (response?.status === 401) {
+        localStorage.removeItem('serviceToken')
+        location.replace('/login')
+      }
       result = await response.json();
     } catch (error) {
       if (response?.status === 404) {
         return reject("404");
       } else if (response?.status === 401) {
+        localStorage.removeItem('serviceToken')
+        location.replace('/login')
         return reject("Unauthorized");
       } else if (response?.status === 403) {
         return reject("Forbidden");
