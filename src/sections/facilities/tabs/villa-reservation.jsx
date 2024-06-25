@@ -120,6 +120,7 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                                         key={row.id}
                                         onClick={() => {
                                             console.log("Kayıt Id => ", row.original.id);
+                                            navigate(`/reservations/show/summary/${row.original.id}`)
                                         }}
                                         style={{ cursor: 'pointer' }}
                                     >
