@@ -11,7 +11,7 @@ import { openSnackbar } from 'api/snackbar';
 import { Trash } from 'iconsax-react';
 import { ReservationInfoRemove } from 'services/reservationInfoServices';
 
-export default function CustomerModalDelete({ id, title, open, handleClose, setIsEdit }) {
+export default function CustomerModalDelete({ id, title, open, handleClose, setIsEdit, selectedItem }) {
   const deletehandler = async () => {
     await ReservationInfoRemove(id).then((res) => {
       setIsEdit(true);
@@ -61,12 +61,10 @@ export default function CustomerModalDelete({ id, title, open, handleClose, setI
               Misafiri silmek istiyormusunuz?
             </Typography>
             <Typography align="center">
-              By deleting
               <Typography variant="subtitle1" component="span">
-                {' '}
-                &quot;{title}&quot;{' '}
+                {selectedItem?.name} {selectedItem?.surname} {""}
               </Typography>
-              user, all task assigned to that user will also be deleted.
+              adlı misafiri silmek istediğinize emin misiniz?
             </Typography>
           </Stack>
 

@@ -11,7 +11,7 @@ import { openSnackbar } from 'api/snackbar';
 import { Trash } from 'iconsax-react';
 import { DistanceRulerRemove } from 'services/distanceRulerServices';
 
-export default function DistanceRulerModalDelete({ id, title, open, handleClose, setIsEdit }) {
+export default function DistanceRulerModalDelete({ id, title, open, handleClose, setIsEdits, selectedItem }) {
   const deletehandler = async () => {
 
     await DistanceRulerRemove(id).then((res) => {
@@ -63,12 +63,10 @@ export default function DistanceRulerModalDelete({ id, title, open, handleClose,
               Mesafeyi silmek istiyormusunuz?
             </Typography>
             <Typography align="center">
-              By deleting
               <Typography variant="subtitle1" component="span">
-                {' '}
-                &quot;{title}&quot;{' '}
+                "{selectedItem?.name}" {""}
               </Typography>
-              user, all task assigned to that user will also be deleted.
+              adlı mesafe cetvelini silmek istediğinize emin misiniz?
             </Typography>
           </Stack>
 

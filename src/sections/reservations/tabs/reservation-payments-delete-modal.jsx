@@ -11,7 +11,7 @@ import { openSnackbar } from 'api/snackbar';
 import { Trash } from 'iconsax-react';
 import { PaymentRemove } from 'services/paymentServices';
 
-export default function PaymentModalDelete({ id, title, open, handleClose, setIsEdit }) {
+export default function PaymentModalDelete({ id, title, open, handleClose, setIsEdit, selectedItem }) {
   const deletehandler = async () => {
     await PaymentRemove(id).then((res) => {
       setIsEdit(true);
@@ -61,12 +61,10 @@ export default function PaymentModalDelete({ id, title, open, handleClose, setIs
               Ödemeyi silmek istiyormusunuz?
             </Typography>
             <Typography align="center">
-              By deleting
               <Typography variant="subtitle1" component="span">
-                {' '}
-                &quot;{title}&quot;{' '}
+                {selectedItem?.amount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} TL {""}
               </Typography>
-              user, all task assigned to that user will also be deleted.
+              tutarındaki ödemeyi silmek istediğinize emin misiniz?
             </Typography>
           </Stack>
 

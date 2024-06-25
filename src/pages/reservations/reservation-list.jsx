@@ -120,7 +120,7 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
                                     <TableRow
                                         key={row.id}
                                         onClick={() => {
-                                            console.log("Kayıt Id => ", row.original.id);
+                                            // console.log("Kayıt Id => ", row.original.id);
                                             navigate(`/reservations/show/summary/${row.original.id}`)
                                         }}
                                         style={{ cursor: 'pointer' }}
@@ -165,8 +165,9 @@ export default function ReservationList() {
     const [reservationModal, setReservationModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false)
     const [showAllReservation, setShowAllReservation] = useState(false)
-    const [reservationDeleteId, setReservationDeleteId] = useState('');    
+    const [reservationDeleteId, setReservationDeleteId] = useState('');
     const [reservationModalDelete, setReservationModalDelete] = useState(false);
+    const [selectedReservationDeleteItem, setSelectedReservationDeleteItem] = useState([])
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -295,6 +296,7 @@ export default function ReservationList() {
                                         e.stopPropagation();
                                         handleClose();
                                         setReservationDeleteId(Number(row.original.id));
+                                        setSelectedReservationDeleteItem(row.original.attributes);
                                     }}
                                 >
                                     <Trash />
@@ -314,7 +316,7 @@ export default function ReservationList() {
     };
 
     if (loading) return (<Loader open={loading} />)
-    
+
     return (
         <>
             <ReactTable
@@ -336,7 +338,7 @@ export default function ReservationList() {
             />
 
             <ReservationModal open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
-            <ReservationModalDelete setIsDeleted={setIsDeleted} setLoading={setLoading} id={Number(reservationDeleteId)} title={reservationDeleteId} open={reservationModalDelete} handleClose={handleClose} />
+            <ReservationModalDelete selectedItem={selectedReservationDeleteItem} setIsDeleted={setIsDeleted} setLoading={setLoading} id={Number(reservationDeleteId)} title={reservationDeleteId} open={reservationModalDelete} handleClose={handleClose} />
         </>
     );
 }

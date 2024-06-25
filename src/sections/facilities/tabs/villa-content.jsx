@@ -25,9 +25,11 @@ export default function VillaContentSection() {
 
     const [distanceRulerModal, setDistanceRulerModal] = useState(false)
     const [distanceRulerModalDelete, setDistanceRulerModalDelete] = useState(false);
+    const [selectedDistanceDeleteItem, setSelectedDistanceDeleteItem] = useState([])
 
     const [priceTableModal, setPriceTableModal] = useState(false)
     const [priceTableModalDelete, setPriceTableModalDelete] = useState(false);
+    const [selectedPriceDeleteItem, setSelectedPriceDeleteItem] = useState([])
 
     const [isEdit, setIsEdit] = useState(true);
     const [distanceRulerDeleteId, setDistanceRulerDeleteId] = useState('');
@@ -40,7 +42,6 @@ export default function VillaContentSection() {
                 setVilla(res.data);
                 setLoading(false);
                 setIsEdit(false);
-                console.log(res.data);
             })
         }
     }, [isEdit])
@@ -175,6 +176,7 @@ export default function VillaContentSection() {
                                                                             e.stopPropagation();
                                                                             handleClose();
                                                                             setDistanceRulerDeleteId(Number(row.id));
+                                                                            setSelectedDistanceDeleteItem(row.attributes)
                                                                         }}
                                                                     >
                                                                         <Trash />
@@ -188,7 +190,7 @@ export default function VillaContentSection() {
                                         </Table>
                                     </TableContainer>
                                     <DistanceRulerModal open={distanceRulerModal} modalToggler={setDistanceRulerModal} villaId={params.id} setIsEdit={setIsEdit} />
-                                    <DistanceRulerModalDelete setIsEdit={setIsEdit} id={Number(distanceRulerDeleteId)} title={distanceRulerDeleteId} open={distanceRulerModalDelete} handleClose={handleClose} />
+                                    <DistanceRulerModalDelete selectedItem={selectedDistanceDeleteItem} setIsEdit={setIsEdit} id={Number(distanceRulerDeleteId)} title={distanceRulerDeleteId} open={distanceRulerModalDelete} handleClose={handleClose} />
                                 </MainCard>
                             </Grid>
                             <Grid item xs={12}>
@@ -220,8 +222,9 @@ export default function VillaContentSection() {
                                                                         color="error"
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            handleClosePriceTable();                                                                            
+                                                                            handleClosePriceTable();
                                                                             setPriceTableDeleteId(Number(row.id));
+                                                                            setSelectedPriceDeleteItem(row.attributes)
                                                                         }}
                                                                     >
                                                                         <Trash />
@@ -235,7 +238,7 @@ export default function VillaContentSection() {
                                         </Table>
                                     </TableContainer>
                                     <PriceTableModal open={priceTableModal} modalToggler={setPriceTableModal} villaId={params.id} setIsEdit={setIsEdit} />
-                                    <PriceTableModalDelete setIsEdit={setIsEdit} id={Number(priceTableDeleteId)} title={priceTableDeleteId} open={priceTableModalDelete} handleClose={handleClosePriceTable} />
+                                    <PriceTableModalDelete selectedItem={selectedPriceDeleteItem} setIsEdit={setIsEdit} id={Number(priceTableDeleteId)} title={priceTableDeleteId} open={priceTableModalDelete} handleClose={handleClosePriceTable} />
                                 </MainCard>
                             </Grid>
                         </>

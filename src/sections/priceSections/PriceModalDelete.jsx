@@ -11,7 +11,7 @@ import { openSnackbar } from 'api/snackbar';
 import { Trash } from 'iconsax-react';
 import { PriceRemove } from 'services/priceServices';
 
-export default function PriceModalDelete({ id, title, open, handleClose, setIsEdit }) {
+export default function PriceModalDelete({ id, title, open, handleClose, setIsEdit, selectedItem }) {
   const deletehandler = async () => {
     await PriceRemove(id).then((res) => {
       setIsEdit(true);
@@ -61,12 +61,15 @@ export default function PriceModalDelete({ id, title, open, handleClose, setIsEd
               Fiyatı silmek istiyormusunuz?
             </Typography>
             <Typography align="center">
-              By deleting
+              Başlangıç tarihi {""}
               <Typography variant="subtitle1" component="span">
-                {' '}
-                &quot;{title}&quot;{' '}
+                {selectedItem?.checkIn} {""}
               </Typography>
-              user, all task assigned to that user will also be deleted.
+              Bitiş tarihi {""}
+              <Typography variant="subtitle1" component="span">
+                {selectedItem?.checkOut} {""}
+              </Typography>
+              olan fiyatı silmek istediğinize emin misiniz?
             </Typography>
           </Stack>
 

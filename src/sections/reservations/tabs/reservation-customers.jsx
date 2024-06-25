@@ -37,6 +37,7 @@ export default function ReservationCustomerSection() {
     const [customerUpdateModal, setCustomerUpdateModal] = useState(false)
     const [customerModalDelete, setCustomerModalDelete] = useState(false);
     const [selectedId, setSelectedId] = useState(0)
+    const [selectedCustomerDeleteItem, setSelectedCustomerDeleteItem] = useState([])
 
     const [isEdit, setIsEdit] = useState(true);
 
@@ -106,6 +107,7 @@ export default function ReservationCustomerSection() {
                                                         e.stopPropagation();
                                                         handleClose();
                                                         setCustomerDeleteId(Number(row.id));
+                                                        setSelectedCustomerDeleteItem(row.attributes)
                                                     }}
                                                 >
                                                     <Trash />
@@ -120,7 +122,7 @@ export default function ReservationCustomerSection() {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <CustomerModalDelete setIsEdit={setIsEdit} id={Number(customerDeleteId)} title={customerDeleteId} open={customerModalDelete} handleClose={handleClose} />
+            <CustomerModalDelete selectedItem={selectedCustomerDeleteItem} setIsEdit={setIsEdit} id={Number(customerDeleteId)} title={customerDeleteId} open={customerModalDelete} handleClose={handleClose} />
             <ReservationCustomerModal open={customerModal} modalToggler={setCustomerModal} setIsEdit={setIsEdit} />
             <ReservationCustomerUpdateModal open={customerUpdateModal} id={selectedId} modalToggler={setCustomerUpdateModal} setIsEdit={setIsEdit} />
         </MainCard>

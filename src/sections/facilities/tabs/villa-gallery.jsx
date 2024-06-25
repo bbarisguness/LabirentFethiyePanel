@@ -30,6 +30,7 @@ export default function VillaGallerySection() {
   const [isEdit, setIsEdit] = useState(true);
   const [photoDeleteId, setPhotoDeleteId] = useState('');
   const [photoModalDelete, setPhotoModalDelete] = useState(false);
+  const [selectedPhotoDeleteItem, setSelectedPhotoDeleteItem] = useState("")
 
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function VillaGallerySection() {
     setLoading(true)
 
     photo.forEach((item, index) => {
-      console.log('click => ', item.id + ' - ' + index);
+      // console.log('click => ', item.id + ' - ' + index);
 
       const values = {
         id: item.id,
@@ -111,7 +112,8 @@ export default function VillaGallerySection() {
                                 e.stopPropagation();
                                 handleClose();
                                 setPhotoDeleteId(Number(item.id));
-                                console.log("photoId => ", Number(item.id));
+                                setSelectedPhotoDeleteItem(item?.attributes?.photo?.data?.attributes?.url)
+                                // console.log("photoId => ", Number(item.id));
                               }}
                             >
                               <Trash />
@@ -129,7 +131,7 @@ export default function VillaGallerySection() {
                 )}
 
               </Grid>
-              <PhotoModalDelete setIsEdit={setIsEdit} id={Number(photoDeleteId)} title={photoDeleteId} open={photoModalDelete} handleClose={handleClose} />
+              <PhotoModalDelete selectedItem={selectedPhotoDeleteItem} setIsEdit={setIsEdit} id={Number(photoDeleteId)} title={photoDeleteId} open={photoModalDelete} handleClose={handleClose} />
 
               <PhotoModal open={photoModal} modalToggler={setPhotoModal} villaId={params.id} setIsEdit={setIsEdit} lastLine={photo[photoList.length - 1]?.attributes.line} setLoading={setLoading} />
 

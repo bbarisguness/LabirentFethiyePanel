@@ -11,7 +11,7 @@ import Loader from 'components/Loader';
 
 // project-imports
 import MainCard from 'components/MainCard';
-import { Add,  Trash } from 'iconsax-react';
+import { Add, Trash } from 'iconsax-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import PriceModal from 'sections/priceSections/PriceModal';
@@ -34,6 +34,7 @@ export default function VillaPriceSection() {
     const [loading, setLoading] = useState(true);
     const [priceModal, setPriceModal] = useState(false);
     const [priceModalDelete, setPriceModalDelete] = useState(false);
+    const [selectedDeleteItem, setSelectedDeleteItem] = useState([])
 
     const [isEdit, setIsEdit] = useState(true);
 
@@ -96,6 +97,7 @@ export default function VillaPriceSection() {
                                                     e.stopPropagation();
                                                     handleClose();
                                                     setPriceDeleteId(Number(row.id));
+                                                    setSelectedDeleteItem(row.attributes)
                                                 }}
                                             >
                                                 <Trash />
@@ -108,7 +110,7 @@ export default function VillaPriceSection() {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <PriceModalDelete setIsEdit={setIsEdit} id={Number(priceDeleteId)} title={priceDeleteId} open={priceModalDelete} handleClose={handleClose} />
+            <PriceModalDelete setIsEdit={setIsEdit} id={Number(priceDeleteId)} title={priceDeleteId} open={priceModalDelete} handleClose={handleClose} selectedItem={selectedDeleteItem}/>
             <PriceModal open={priceModal} modalToggler={setPriceModal} villaId={params.id} setIsEdit={setIsEdit} />
         </MainCard>
     );

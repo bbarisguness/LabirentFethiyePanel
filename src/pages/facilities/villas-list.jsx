@@ -157,6 +157,7 @@ function ReactTable({ data, columns, pagination, setPagination, setSorting, sort
 
 export default function VillasList() {
     const theme = useTheme();
+    const navigate = useNavigate()
 
     const [sorting, setSorting] = useState([{ id: 'id', desc: true }]);
     const [globalFilter, setGlobalFilter] = useState('');
@@ -275,6 +276,7 @@ export default function VillasList() {
                                     color="primary"
                                     onClick={(e) => {
                                         e.stopPropagation();
+                                        navigate(`/facilities/villas-update/${row.original.id}`)
                                     }}
                                 >
                                     <Edit />

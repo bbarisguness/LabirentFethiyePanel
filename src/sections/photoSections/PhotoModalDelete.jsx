@@ -11,34 +11,34 @@ import { openSnackbar } from 'api/snackbar';
 import { Trash } from 'iconsax-react';
 import { PhotoRemove, PhotoRemoveHard } from 'services/photoService';
 
-export default function PhotoModalDelete({ id, title, open, handleClose, setIsEdit }) {
+export default function PhotoModalDelete({ id, title, open, handleClose, setIsEdit, selectedItem }) {
   const deletehandler = async () => {
-    
-    await PhotoRemove(id).then((res)=> {
+
+    await PhotoRemove(id).then((res) => {
       setIsEdit(true);
       if (!res?.error) {
-            openSnackbar({
-              open: true,
-              message: 'Fiyat Silindi',
-              anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-              variant: 'alert',
-              alert: {
-                color: 'success'
-              }
-            });
+        openSnackbar({
+          open: true,
+          message: 'Fiyat Silindi',
+          anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+          variant: 'alert',
+          alert: {
+            color: 'success'
           }
-          else {
-            openSnackbar({
-              open: true,
-              message: res?.error?.message,
-              anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-              variant: 'alert',
-              alert: {
-                color: 'error'
-              }
-            });
+        });
+      }
+      else {
+        openSnackbar({
+          open: true,
+          message: res?.error?.message,
+          anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+          variant: 'alert',
+          alert: {
+            color: 'error'
           }
-          handleClose();
+        });
+      }
+      handleClose();
     })
 
   };
@@ -62,14 +62,9 @@ export default function PhotoModalDelete({ id, title, open, handleClose, setIsEd
             <Typography variant="h4" align="center">
               Resimi silmek istiyormusunuz?
             </Typography>
-            <Typography align="center">
-              By deleting
-              <Typography variant="subtitle1" component="span">
-                {' '}
-                &quot;{title}&quot;{' '}
-              </Typography>
-              user, all task assigned to that user will also be deleted.
-            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'center',marginTop: '40px',marginBottom: '40px' }}>
+              <img src={selectedItem} width={180} height={160} style={{ border: '3px solid #999696' }} />
+            </div>
           </Stack>
 
           <Stack direction="row" spacing={2} sx={{ width: 1 }}>

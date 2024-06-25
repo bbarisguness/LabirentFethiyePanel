@@ -14,7 +14,7 @@ import { GetAllReservationInfos, ReservationInfoRemove } from 'services/reservat
 
 // ==============================|| CUSTOMER - DELETE ||============================== //
 
-export default function ReservationModalDelete({ id, title, open, handleClose, setLoading, setIsDeleted }) {
+export default function ReservationModalDelete({ id, title, open, handleClose, setLoading, setIsDeleted, selectedItem }) {
   const deletehandler = async () => {
     setLoading(true);
 
@@ -70,12 +70,14 @@ export default function ReservationModalDelete({ id, title, open, handleClose, s
               Rezervasyonu Silmek istediğinize eminimisiniz?
             </Typography>
             <Typography align="center">
-              By deleting
               <Typography variant="subtitle1" component="span">
-                {' '}
-                &quot;{title}&quot;{' '}
+                {selectedItem?.villa?.data?.attributes?.name} {""}
               </Typography>
-              user, all task assigned to that user will also be deleted.
+              tesisine bağlı {""}
+              <Typography variant="subtitle1" component="span">
+                {selectedItem?.reservation_infos?.data[0]?.attributes?.name ? selectedItem?.reservation_infos?.data[0]?.attributes?.name : 'Ev Sahibi'} {selectedItem?.reservation_infos?.data[0]?.attributes?.surname ? selectedItem?.reservation_infos?.data[0]?.attributes?.surname : ''} {""}
+              </Typography>
+              adındaki rezervasyonu silmek istediğinize emin misiniz?
             </Typography>
           </Stack>
           <Stack direction="row" spacing={2} sx={{ width: 1 }}>
