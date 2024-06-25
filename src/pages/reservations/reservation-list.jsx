@@ -72,9 +72,9 @@ function ReactTable({ data, columns, modalToggler, pagination, setPagination, se
 
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <FormControlLabel style={{ position: 'relative', top: '5px' }} control={<Switch sx={{ mt: 0 }} />} label={<p style={{ position: 'relative', top: '-4px' }}>Ev Sahibi Rezervasyonları</p>} labelPlacement="start" checked={showAllReservation} onChange={() => setShowAllReservation(!showAllReservation)} />
-                    <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
+                    {/* <Button variant="contained" startIcon={<Add />} onClick={modalToggler} size="large">
                         Rezervasyon Ekle
-                    </Button>
+                    </Button> */}
                 </Stack>
             </Stack>
             <ScrollX>

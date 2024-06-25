@@ -26,13 +26,13 @@ const reservations = {
       icon: icons.maintenance,
       url: '/reservations/list'
     },
-    {
-      id: 'reservations-add-title',
-      title: <FormattedMessage id="reservations-add-title" />,
-      type: 'item',
-      icon: icons.maintenance,
-      url: '/reservations/add'
-    }
+    // {
+    //   id: 'reservations-add-title',
+    //   title: <FormattedMessage id="reservations-add-title" />,
+    //   type: 'item',
+    //   icon: icons.maintenance,
+    //   url: '/reservations/add'
+    // }
   ]
 };
 
