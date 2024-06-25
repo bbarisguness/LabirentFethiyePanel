@@ -29,7 +29,7 @@ export default defineConfig({
     // this ensures that the browser opens upon server start
     open: true,
     // sunucuda çalışması için host kısmında sunucu ip'si yazması gerekli.(185.59.31.233)
-    // host: 185.59.31.233,
+    // host: "185.59.31.233",
     port: 3060
   },
   preview: {
