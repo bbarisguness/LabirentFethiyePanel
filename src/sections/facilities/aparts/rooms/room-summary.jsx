@@ -10,26 +10,25 @@ import Avatar from 'components/@extended/Avatar';
 import LinearWithLabel from 'components/@extended/progress/LinearWithLabel';
 
 import { Add, CallCalling, Eye, Gps, Sms, Trash, Wifi } from 'iconsax-react';
-import { GetApart, GetRoomList,ApartChangeState } from 'services/apartServices';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { openSnackbar } from 'api/snackbar';
 import Loader from 'components/Loader';
-import { GetReservationsTop5 } from 'services/reservationServices';
+import { GetRoom,GetReservationListTop5,RoomChangeState } from 'services/roomServices';
 
 export default function RoomSummarySection() {
   const matchDownMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const params = useParams();
   const [villa, setVilla] = useState();
   const [loading, setLoading] = useState(true);
-  const [rooms, setRooms] = useState([])
+  const [reservations, setReservation] = useState([])
   useEffect(() => {
 
     if (params.id > 0 && loading) {
-      GetApart(params.id).then((res) => {
+      GetRoom(params.id).then((res) => {
         setVilla(res.data);
-        GetRoomList(params.id).then((res) => {
-          setRooms(res.data)
+        GetReservationListTop5(params.id).then((res) => {
+          setReservation(res.data)
           setLoading(false)
         })
       })
@@ -44,7 +43,7 @@ export default function RoomSummarySection() {
       const data = {
         publishedAt: nowDate
       }
-      ApartChangeState(params.id, { data }).then((res) => {
+      RoomChangeState(params.id, { data }).then((res) => {
         setLoading(true)
         if (!res?.error) {
 
@@ -76,7 +75,7 @@ export default function RoomSummarySection() {
       const data = {
         publishedAt: null
       }
-      ApartChangeState(params.id, { data }).then((res) => {
+      RoomChangeState(params.id, { data }).then((res) => {
         setLoading(true)
         if (!res?.error) {
 

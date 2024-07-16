@@ -10,7 +10,6 @@ const ApartChangeState = (id, payload) => put(`/api/aparts/${id}`, payload, true
 
 const CreateApart = (payload) => post(`/api/aparts`, payload, true);
 
-const AddRoom = (payload) => post(`/api/rooms`, payload, true);
 
 
 const GetApartFull = (id) => {
@@ -25,25 +24,6 @@ const GetApartFull = (id) => {
     return get(`/api/aparts/${id}?${query}`);
 }
 
-const GetRoomList = (apartId) => {
-    const query = qs.stringify({
-        //sort: ['checkIn:asc'],
-        //fields: ['id'],
-        // populate: {
-        //     villa: {
-        //         fields: ['id', 'name']
-        //     }
-        // },
-        filters: {
-            apart: {
-                id: {
-                    $eq: apartId
-                }
-            }
-        }
-    })
-    return get(`/api/rooms?${query}`);
-}
 
 // const Villas = (page, size, sort = true, fieldName = 'id', filter) => get(`/api/villas?sort=${fieldName}:${sort ? 'desc' : 'asc'}&publicationState=preview&filters[name][$containsi]=${filter}&pagination[page]=${page}&pagination[pageSize]=${size}`)
 // const GetVillaName = (id) => get(`/api/villas/${id}?fields=name`)
@@ -168,4 +148,4 @@ const GetRoomList = (apartId) => {
 
 
 // export { Villas, GetVillaName, GetVilla, VillaAdd, VillaRemove, VillaIsAvailible, VillaGetPriceForReservation, GetVillaFull, VillaChangeState, GetVillaDetail, VillaUpdate }
-export { Aparts, GetApart, GetRoomList, ApartChangeState, GetApartFull, CreateApart, AddRoom }
+export { Aparts, GetApart, ApartChangeState, GetApartFull, CreateApart }

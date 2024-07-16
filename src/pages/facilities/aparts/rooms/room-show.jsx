@@ -125,7 +125,7 @@ export default function RoomShow() {
             <MainCard border={false}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
                     <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab">
-                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/aparts/apart-show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />                       
+                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/aparts/room-show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />                       
                         <Tab
                             label="Rezervasyonlar"
                             component={Link}

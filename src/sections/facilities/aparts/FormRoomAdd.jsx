@@ -15,7 +15,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { useParams } from 'react-router';
 import { PriceTableAdd } from 'services/priceTableServices';
 import { openSnackbar } from 'api/snackbar';
-import { AddRoom } from 'services/apartServices';
+import { AddRoom } from 'services/roomServices';
 
 
 const getInitialValues = () => {

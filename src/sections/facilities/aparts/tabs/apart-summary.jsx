@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { useMediaQuery, Grid, Stack, List, Divider, ListItem, ListItemIcon, Typography, ListItemSecondaryAction, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton, Button } from '@mui/material';
+import { useLocation, Link, Outlet, useParams, useNavigate } from 'react-router-dom';
 
 // third-party
 import { PatternFormat } from 'react-number-format';
@@ -9,10 +10,11 @@ import MainCard from 'components/MainCard';
 import Avatar from 'components/@extended/Avatar';
 import LinearWithLabel from 'components/@extended/progress/LinearWithLabel';
 
-import { Add, CallCalling, Eye, Gps, Sms, Trash, Wifi } from 'iconsax-react';
-import { GetApart, GetRoomList, ApartChangeState } from 'services/apartServices';
+import { Add, CallCalling, Eye, Gps, Pointer, Sms, Trash, Wifi } from 'iconsax-react';
+import { GetApart,  ApartChangeState } from 'services/apartServices';
+import {GetRoomList } from 'services/roomServices';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+
 import { openSnackbar } from 'api/snackbar';
 import Loader from 'components/Loader';
 import { GetReservationsTop5 } from 'services/reservationServices';
@@ -26,6 +28,7 @@ export default function ApartSummarySection() {
   const [rooms, setRooms] = useState([])
   const [roomAddModal, setRoomAddModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
 
@@ -261,7 +264,7 @@ export default function ApartSummarySection() {
                       {
                         rooms?.map((row, i) => {
                           return (
-                            <TableRow hover key={row.id}>
+                            <TableRow hover key={row.id} sx={{cursor:'Pointer'}} onClick={() => { navigate(`/facilities/aparts/room-show/summary/${row.id}`) }}>
                               <TableCell sx={{ pl: 3 }} component="th" scope="row">
                                 {row.attributes.name}
                               </TableCell>
