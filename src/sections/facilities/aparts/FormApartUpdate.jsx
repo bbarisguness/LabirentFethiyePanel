@@ -14,43 +14,49 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import CircularWithPath from 'components/@extended/progress/CircularWithPath';
 import { openSnackbar } from 'api/snackbar';
 import ReactQuill from 'react-quill';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 // assets
 import { CloseCircle } from 'iconsax-react';
 import 'react-quill/dist/quill.snow.css';
-import { CreateApart } from 'services/apartServices';
+import { ApartChangeState, GetApart } from 'services/apartServices';
 
 // CONSTANT
-const getInitialValues = () => {
+const getInitialValues = (villa) => {
   const newVilla = {
-    slug: '',
-    name: '',
-    featureTextRed: '',
-    featureTextBlue: '',
-    featureTextWhite: '',
-    wifiPassword: '',
-    waterMaterNumber: '',
-    electricityMeterNumber: '',
-    internetMeterNumber: '',
-    googleMap: '',
-    region: '',
-    descriptionShort: '',
-    descriptionLong: '',
-    onlineReservation: false,
-    metaTitle: '',
-    metaDescription: '',
+    slug: villa?.attributes?.slug || '',
+    name: villa?.attributes?.name || '',
+    featureTextRed: villa?.attributes?.featureTextRed || '',
+    featureTextBlue: villa?.attributes?.featureTextBlue || '',
+    featureTextWhite: villa?.attributes?.featureTextWhite || '',
+    wifiPassword: villa?.attributes?.wifiPassword || '',
+    waterMaterNumber: villa?.attributes?.waterMaterNumber || '',
+    electricityMeterNumber: villa?.attributes?.electricityMeterNumber || '',
+    internetMeterNumber: villa?.attributes?.internetMeterNumber || '',
+    googleMap: villa?.attributes?.googleMap || '',
+    region: villa?.attributes?.region || '',
+    descriptionShort: villa?.attributes?.descriptionShort || '',
+    descriptionLong: villa?.attributes?.descriptionLong || '',
+    onlineReservation: villa?.attributes?.onlineReservation || false,
+    metaTitle: villa?.attributes?.metaTitle || '',
+    metaDescription: villa?.attributes?.metaDescription || '',
   };
   return newVilla;
 };
 
-export default function FormApartAdd() {
+export default function FormApartUpdate() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [villa, setVilla] = useState([])
+  const params = useParams()
 
   useEffect(() => {
-    setLoading(false);
+    GetApart(params?.id).then((res) => {
+      setVilla(res?.data)
+      setLoading(false);
+    })
   }, []);
+
 
   const VillaSchema = Yup.object().shape({
     name: Yup.string().max(255).required('Lütfen villa adı yazınız..'),
@@ -59,43 +65,41 @@ export default function FormApartAdd() {
   });
 
   const formik = useFormik({
-    initialValues: getInitialValues(),
+    initialValues: getInitialValues(villa),
     validationSchema: VillaSchema,
     enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-
-        values.slug = values.name
-          .toString()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/[^\w-]+/g, '')
-          .replace(/--+/g, '-');
-
         const data = {
           data: {
             ...values
           }
         }
+        await ApartChangeState(params.id, data).then((res) => {
+          if (res?.error) {
+            openSnackbar({
+              open: true,
+              message: res?.error?.message,
+              variant: 'alert',
 
-        values.categories
+              alert: {
+                color: 'errorr'
+              }
+            });
+          } else {
+            openSnackbar({
+              open: true,
+              message: 'Apart Güncellendi.',
+              variant: 'alert',
 
-        await CreateApart(data).then((res) => {
-          openSnackbar({
-            open: true,
-            message: 'Yeni Apart Eklendi.',
-            variant: 'alert',
-
-            alert: {
-              color: 'success'
-            }
-          });
-          setSubmitting(false);
-          navigate(`/facilities/aparts/apart-show/summary/${res?.data?.id}`);
-        });
+              alert: {
+                color: 'success'
+              }
+            });
+            navigate(`/facilities/aparts/apart-show/summary/${res?.data?.id}`);
+          }
+        })
+        setSubmitting(false)
       } catch (error) {
         // console.error(error);
       }
@@ -128,11 +132,11 @@ export default function FormApartAdd() {
                 <Grid container spacing={3}>
                   <Grid item xs={6}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="villa-name">Apart Adı</InputLabel>
+                      <InputLabel htmlFor="villa-name">Villa Adı</InputLabel>
                       <TextField
                         fullWidth
                         id="villa-name"
-                        placeholder="Apart Adı"
+                        placeholder="Villa Adı"
                         {...getFieldProps('name')}
                         error={Boolean(touched.name && errors.name)}
                         helperText={touched.name && errors.name}
@@ -152,6 +156,9 @@ export default function FormApartAdd() {
                       />
                     </Stack>
                   </Grid>
+
+
+
 
                   <Grid item xs={4}>
                     <InputLabel htmlFor="villa-featureTextRed">Kırmızı Etiket</InputLabel>
@@ -248,7 +255,7 @@ export default function FormApartAdd() {
 
                   <Grid item xs={12}>
                     <InputLabel htmlFor="longDescription">Genel Açıklama</InputLabel>
-                    <ReactQuill style={{ height: '400px', marginBottom: '40px' }} onChange={handleChangeEditor} />
+                    <ReactQuill style={{ height: '400px', marginBottom: '40px' }} value={formik.values.descriptionLong} onChange={handleChangeEditor} />
                   </Grid>
 
 
@@ -292,7 +299,7 @@ export default function FormApartAdd() {
                     <Typography variant="caption" color="text.secondary">
                       Tesisinize Online (Anlık) Rezervasyon Kabul Ediyormusunuz?
                     </Typography>
-                    <FormControlLabel control={<Switch sx={{ mt: 0 }} />} label="" labelPlacement="start" onChange={() => { setFieldValue('onlineReservation', !getFieldProps('onlineReservation').value) }} />
+                    <FormControlLabel control={<Switch sx={{ mt: 0 }} />} label="" checked={formik.values.onlineReservation} labelPlacement="start" onChange={() => { setFieldValue('onlineReservation', !getFieldProps('onlineReservation').value) }} />
                   </Grid>
                 </Grid>
               </Grid>

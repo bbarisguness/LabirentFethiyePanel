@@ -71,7 +71,7 @@ function ReactTable({ data, columns, pagination, setPagination, setSorting, sort
                         placeholder={`Search ${data?.meta?.pagination?.total} records...`}
                     />
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <Button variant="contained" startIcon={<Add />} onClick={() => { navigate("/facilities/aparts/apart-add"); }} size="large">
+                        <Button variant="contained" startIcon={<Add />} onClick={() => { navigate("/facilities/apart-add"); }} size="large">
                             Apart Ekle
                         </Button>
                     </Stack>
@@ -273,7 +273,7 @@ export default function ApartList() {
                                     color="primary"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        navigate(`/facilities/aparts/apart-update/${row.original.id}`)
+                                        navigate(`/facilities/apart-update/${row.original.id}`)
                                     }}
                                 >
                                     <Edit />

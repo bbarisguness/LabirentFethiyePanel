@@ -114,7 +114,7 @@ export default function ApartShow() {
         <>
             <Breadcrumbs custom links={breadcrumbLinks} />
             <Grid style={{ marginBottom: '10px' }} container justifyContent="flex-end" alignItems="normal">
-                <Button onClick={() => navigate(`/facilities/aparts/apart-update/${params.id}`)} size='small' type="button" variant="contained">GÜNCELLE</Button>
+                <Button onClick={() => navigate(`/facilities/apart-update/${params.id}`)} size='small' type="button" variant="contained">GÜNCELLE</Button>
             </Grid>
             <MainCard border={false}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>

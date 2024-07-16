@@ -25,6 +25,27 @@ const GetPhotos = (villaId) => {
     return get(`/api/photos?${query}`);
 }
 
+const GetPhotosApart = (apartId) => {
+    const query = qs.stringify({
+        sort: ['line:asc'],
+        fields: ['line'],
+        populate: ['photo'],
+        filters: {
+            apart: {
+                id: {
+                    $eq: apartId
+                }
+            }
+        },
+        pagination: {
+            pageSize: 100,
+            page: 1,
+        },
+        publicationState: 'live',
+    });
+    return get(`/api/photos?${query}`);
+}
+
 
 const PhotoPut = (id, payload) => put(`/api/photos/${id}`, payload, true);
 const PhotoPost = (payload) => post(`/api/photos`, payload, true);
@@ -35,4 +56,4 @@ const PhotoRemoveHard = (id) => remove('/api/upload/files/' + id)
 //--- /api/upload/files/:id	
 
 
-export { GetPhotos, PhotoPut, PhotoPost, Upload, PhotoRemove,PhotoRemoveHard }
+export { GetPhotos, PhotoPut, PhotoPost, Upload, PhotoRemove, PhotoRemoveHard, GetPhotosApart }

@@ -9,7 +9,7 @@ import SimpleBar from 'components/third-party/SimpleBar';
 import FormPriceAdd from './FormDistanceRulerAdd';
 
 
-export default function DistanceRulerModal({ open, modalToggler, villaId, setIsEdit }) {
+export default function DistanceRulerModal({ open, modalToggler, villaId, setIsEdit, apart }) {
 
     const closeModal = () => modalToggler(false);
 
@@ -29,7 +29,7 @@ export default function DistanceRulerModal({ open, modalToggler, villaId, setIsE
                         content={false}
                     >
                         <SimpleBar sx={{ maxHeight: `calc(100vh - 48px)`, '& .simplebar-content': { display: 'flex', flexDirection: 'column' } }}>
-                            <FormPriceAdd villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} />
+                            <FormPriceAdd apart={apart} villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} />
                         </SimpleBar>
                     </MainCard>
                 </Modal>

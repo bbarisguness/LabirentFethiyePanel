@@ -31,6 +31,8 @@ import ReservationCustomer from 'pages/reservations/tabs/reservation-customers';
 import ApartShow from 'pages/facilities/aparts/apart-show';
 import ApartSummary from 'pages/facilities/aparts/tabs/apart-summary';
 import ApartContent from 'pages/facilities/aparts/tabs/apart-content';
+import ApartAdd from 'pages/facilities/aparts/apart-add';
+import ApartUpdate from 'pages/facilities/aparts/apart-update';
 import RoomShow from 'pages/facilities/aparts/rooms/room-show';
 import RoomSummary from 'pages/facilities/aparts/rooms/tabs/room-summary';
 
@@ -102,6 +104,14 @@ const MainRoutes = {
             {
               path: 'aparts-list',
               element: <ApartList />
+            },
+            {
+              path: 'apart-add',
+              element: <ApartAdd />
+            },
+            {
+              path: 'apart-update/:id',
+              element: <ApartUpdate />
             },
             {
               path: 'aparts/apart-show',
