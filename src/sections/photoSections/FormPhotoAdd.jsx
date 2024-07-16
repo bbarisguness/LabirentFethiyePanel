@@ -31,7 +31,7 @@ const getInitialValues = () => {
     return newDistanceRuler;
 };
 
-export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoading }) {
+export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoading, apart = false }) {
     const params = useParams();
 
     const [uploadLoading, setUploadLoading] = useState(false);
@@ -54,15 +54,27 @@ export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoadi
                 Upload(fd).then((res) => {
 
                     res.map((img, index) => {
+                        let imgJson = {}
+                        if (apart) {
+                            imgJson = {
+                                data: {
+                                    name: img.name,
+                                    line: (lastLine && lastLine + (index + 1)) || (index + 1),
+                                    photo: img.id,
+                                    apart: { connect: [params.id] }
+                                }
+                            };
+                        } else {
+                            imgJson = {
+                                data: {
+                                    name: img.name,
+                                    line: (lastLine && lastLine + (index + 1)) || (index + 1),
+                                    photo: img.id,
+                                    villa: { connect: [params.id] }
+                                }
+                            };
+                        }
 
-                        const imgJson = {
-                            data: {
-                                name: img.name,
-                                line: (lastLine && lastLine + (index + 1)) || (index + 1),
-                                photo: img.id,
-                                villa: { connect: [params.id] }
-                            }
-                        };
 
                         PhotoPost(imgJson).then((ress) => {
                             indexLenght = index + 1;

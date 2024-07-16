@@ -19,7 +19,7 @@ export default function PhotoModalDelete({ id, title, open, handleClose, setIsEd
       if (!res?.error) {
         openSnackbar({
           open: true,
-          message: 'Fiyat Silindi',
+          message: 'Resim Silindi',
           anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
           variant: 'alert',
           alert: {
