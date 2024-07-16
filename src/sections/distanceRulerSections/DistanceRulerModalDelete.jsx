@@ -11,7 +11,7 @@ import { openSnackbar } from 'api/snackbar';
 import { Trash } from 'iconsax-react';
 import { DistanceRulerRemove } from 'services/distanceRulerServices';
 
-export default function DistanceRulerModalDelete({ id, title, open, handleClose, setIsEdits, selectedItem }) {
+export default function DistanceRulerModalDelete({ id, title, open, handleClose, setIsEdit, selectedItem }) {
   const deletehandler = async () => {
 
     await DistanceRulerRemove(id).then((res) => {

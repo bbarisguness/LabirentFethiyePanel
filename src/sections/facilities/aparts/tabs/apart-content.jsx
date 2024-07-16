@@ -35,8 +35,6 @@ export default function ApartContentSection() {
     const [distanceRulerDeleteId, setDistanceRulerDeleteId] = useState('');
     const [priceTableDeleteId, setPriceTableDeleteId] = useState('');
 
-    console.log('apart content');
-
 
     useEffect(() => {
         if (isEdit) {
@@ -192,7 +190,7 @@ export default function ApartContentSection() {
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
-                                    <DistanceRulerModal open={distanceRulerModal} modalToggler={setDistanceRulerModal} villaId={params.id} setIsEdit={setIsEdit} />
+                                    <DistanceRulerModal apart={true} open={distanceRulerModal} modalToggler={setDistanceRulerModal} villaId={params.id} setIsEdit={setIsEdit} />
                                     <DistanceRulerModalDelete selectedItem={selectedDistanceDeleteItem} setIsEdit={setIsEdit} id={Number(distanceRulerDeleteId)} title={distanceRulerDeleteId} open={distanceRulerModalDelete} handleClose={handleClose} />
                                 </MainCard>
                             </Grid>
@@ -240,7 +238,7 @@ export default function ApartContentSection() {
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
-                                    <PriceTableModal open={priceTableModal} modalToggler={setPriceTableModal} villaId={params.id} setIsEdit={setIsEdit} />
+                                    <PriceTableModal apart={true} open={priceTableModal} modalToggler={setPriceTableModal} villaId={params.id} setIsEdit={setIsEdit} />
                                     <PriceTableModalDelete selectedItem={selectedPriceDeleteItem} setIsEdit={setIsEdit} id={Number(priceTableDeleteId)} title={priceTableDeleteId} open={priceTableModalDelete} handleClose={handleClosePriceTable} />
                                 </MainCard>
                             </Grid>

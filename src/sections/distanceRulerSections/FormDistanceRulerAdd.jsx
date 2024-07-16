@@ -25,12 +25,13 @@ const getInitialValues = () => {
         name: '',
         value: '',
         icon: '',
-        villa: {}
+        villa: {},
+        apart: {}
     };
     return newDistanceRuler;
 };
 
-export default function FormDistanceRulerAdd({ closeModal, setIsEdit }) {
+export default function FormDistanceRulerAdd({ closeModal, setIsEdit, apart = false }) {
     const params = useParams();
 
     const validationSchema = Yup.object({
@@ -45,15 +46,30 @@ export default function FormDistanceRulerAdd({ closeModal, setIsEdit }) {
         enableReinitialize: true,
         onSubmit: async (values, { setSubmitting }) => {
             try {
-                formik.values.villa = { connect: [params.id] };
-                DistanceRulerAdd({
-                    data: {
-                        name: values.name,
-                        value: values.value,
-                        icon: values.icon,
-                        villa: values.villa
+                let data = {}
+                if (apart) {
+                    formik.values.apart = { connect: [params.id] };
+                    data = {
+                        data: {
+                            name: values.name,
+                            value: values.value,
+                            icon: values.icon,
+                            apart: values.apart
+                        }
                     }
-                }).then((res) => {
+                } else {
+                    formik.values.villa = { connect: [params.id] };
+                    data = {
+                        data: {
+                            name: values.name,
+                            value: values.value,
+                            icon: values.icon,
+                            villa: values.villa
+                        }
+                    }
+                }
+
+                DistanceRulerAdd(data).then((res) => {
                     setIsEdit(true);
                     if (!res?.error) {
                         openSnackbar({

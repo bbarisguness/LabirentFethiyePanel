@@ -23,12 +23,13 @@ const getInitialValues = () => {
         description: '',
         icon: '',
         price: 0,
-        villa: {}
+        villa: {},
+        apart: {}
     };
     return newPriceDate;
 };
 
-export default function FormPriceTableAdd({ closeModal, setIsEdit }) {
+export default function FormPriceTableAdd({ closeModal, setIsEdit, apart = false }) {
     const params = useParams();
 
     const validationSchema = Yup.object({
@@ -44,18 +45,28 @@ export default function FormPriceTableAdd({ closeModal, setIsEdit }) {
         enableReinitialize: true,
         onSubmit: async (values, { setSubmitting }) => {
             try {
-
-                formik.values.villa = { connect: [params.id] };
-
-                PriceTableAdd({
-                    data: {
+                let data = {}
+                if (apart) {
+                    formik.values.apart = { connect: [params.id] };
+                    data = {
+                        name: values.name,
+                        description: values.description,
+                        icon: values.icon,
+                        price: values.price,
+                        apart: { connect: [params.id] }
+                    }
+                } else {
+                    formik.values.villa = { connect: [params.id] };
+                    data = {
                         name: values.name,
                         description: values.description,
                         icon: values.icon,
                         price: values.price,
                         villa: { connect: [params.id] }
                     }
-                }).then((res) => {
+                }
+
+                PriceTableAdd({ data }).then((res) => {
                     setIsEdit(true);
                     if (!res?.error) {
                         openSnackbar({

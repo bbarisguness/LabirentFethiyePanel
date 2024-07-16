@@ -6,10 +6,11 @@ import Modal from '@mui/material/Modal';
 // project imports
 import MainCard from 'components/MainCard';
 import SimpleBar from 'components/third-party/SimpleBar';
-import FormPriceAdd from './FormDistanceRulerAdd';
+import FormRoomAdd from './FormRoomAdd';
 
 
-export default function DistanceRulerModal({ open, modalToggler, villaId, setIsEdit, apart }) {
+
+export default function RoomAddModal({ open, modalToggler, villaId, setIsEdit }) {
 
     const closeModal = () => modalToggler(false);
 
@@ -29,7 +30,7 @@ export default function DistanceRulerModal({ open, modalToggler, villaId, setIsE
                         content={false}
                     >
                         <SimpleBar sx={{ maxHeight: `calc(100vh - 48px)`, '& .simplebar-content': { display: 'flex', flexDirection: 'column' } }}>
-                            <FormPriceAdd apart={apart} villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} />
+                            <FormRoomAdd villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} />
                         </SimpleBar>
                     </MainCard>
                 </Modal>

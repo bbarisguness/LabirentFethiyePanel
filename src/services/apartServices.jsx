@@ -8,9 +8,14 @@ const GetApart = (id) => get(`/api/aparts/${id}?populate[photos][sort]=line:asc&
 
 const ApartChangeState = (id, payload) => put(`/api/aparts/${id}`, payload, true);
 
+const CreateApart = (payload) => post(`/api/aparts`, payload, true);
+
+const AddRoom = (payload) => post(`/api/rooms`, payload, true);
+
+
 const GetApartFull = (id) => {
     const query = qs.stringify({
-        populate: ['distance_rulers', 'price_tables'],        
+        populate: ['distance_rulers', 'price_tables'],
         // populate: {
         //     price_tables: {
         //         fields: ['id', 'name', 'value']
@@ -21,24 +26,24 @@ const GetApartFull = (id) => {
 }
 
 const GetRoomList = (apartId) => {
-        const query = qs.stringify({
-            //sort: ['checkIn:asc'],
-            //fields: ['id'],
-            // populate: {
-            //     villa: {
-            //         fields: ['id', 'name']
-            //     }
-            // },
-            filters: {
-                apart : {
-                    id : {
-                        $eq : apartId
-                    }
+    const query = qs.stringify({
+        //sort: ['checkIn:asc'],
+        //fields: ['id'],
+        // populate: {
+        //     villa: {
+        //         fields: ['id', 'name']
+        //     }
+        // },
+        filters: {
+            apart: {
+                id: {
+                    $eq: apartId
                 }
             }
-        })
-        return get(`/api/rooms?${query}`);
-    }
+        }
+    })
+    return get(`/api/rooms?${query}`);
+}
 
 // const Villas = (page, size, sort = true, fieldName = 'id', filter) => get(`/api/villas?sort=${fieldName}:${sort ? 'desc' : 'asc'}&publicationState=preview&filters[name][$containsi]=${filter}&pagination[page]=${page}&pagination[pageSize]=${size}`)
 // const GetVillaName = (id) => get(`/api/villas/${id}?fields=name`)
@@ -163,4 +168,4 @@ const GetRoomList = (apartId) => {
 
 
 // export { Villas, GetVillaName, GetVilla, VillaAdd, VillaRemove, VillaIsAvailible, VillaGetPriceForReservation, GetVillaFull, VillaChangeState, GetVillaDetail, VillaUpdate }
-export { Aparts,GetApart ,GetRoomList,ApartChangeState,GetApartFull}
+export { Aparts, GetApart, GetRoomList, ApartChangeState, GetApartFull, CreateApart, AddRoom }
