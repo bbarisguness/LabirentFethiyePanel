@@ -35,6 +35,8 @@ import ApartAdd from 'pages/facilities/aparts/apart-add';
 import ApartUpdate from 'pages/facilities/aparts/apart-update';
 import RoomShow from 'pages/facilities/aparts/rooms/room-show';
 import RoomSummary from 'pages/facilities/aparts/rooms/tabs/room-summary';
+import ApartGallery from 'pages/facilities/aparts/tabs/apart-gallery';
+import ApartFile from 'pages/facilities/aparts/tabs/apart-file';
 
 
 const ErrorPage = Loadable(lazy(() => import('pages/error-pages/404')));
