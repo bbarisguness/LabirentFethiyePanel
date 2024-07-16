@@ -8,7 +8,7 @@ import UserList from 'pages/settings/user-settings/user-list';
 import RoleList from 'pages/settings/user-settings/role-list';
 import Default from 'pages/default';
 import VillasList from 'pages/facilities/villas-list';
-import ApartsList from 'pages/facilities/apars-list';
+import ApartList from 'pages/facilities/aparts/apart-list';
 import VillaAdd from 'pages/facilities/villa-add';
 import VillaShow from 'pages/facilities/villa-show';
 import VillaSummary from 'pages/facilities/tabs/villa-summary';
@@ -28,6 +28,9 @@ import ReservationSummary from 'pages/reservations/tabs/reservation-summary';
 import ReservationPriceDetail from 'pages/reservations/tabs/reservation-price-details';
 import ReservationPayment from 'pages/reservations/tabs/reservation-payments';
 import ReservationCustomer from 'pages/reservations/tabs/reservation-customers';
+import ApartShow from 'pages/facilities/aparts/apart-show';
+import ApartSummary from 'pages/facilities/aparts/tabs/apart-summary';
+import ApartContent from 'pages/facilities/aparts/tabs/apart-content';
 
 
 const ErrorPage = Loadable(lazy(() => import('pages/error-pages/404')));
@@ -96,10 +99,24 @@ const MainRoutes = {
             },
             {
               path: 'aparts-list',
-              element: <ApartsList />
+              element: <ApartList />
+            },
+            {
+              path: 'aparts/apart-show',
+              element: <ApartShow />,
+              children: [
+                {
+                  path: 'summary/:id',
+                  element: <ApartSummary />
+                },
+                {
+                  path: 'content/:id',
+                  element: <ApartContent />
+                }
+              ]
             }
           ]
-        },        
+        },
         {
           path: '/reservations',
           children: [
