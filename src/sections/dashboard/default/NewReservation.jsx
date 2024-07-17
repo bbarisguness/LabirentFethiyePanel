@@ -31,7 +31,7 @@ const NewReservation = () => {
     })
   }, [])
 
-
+console.log(data);
 
   //
   return (
@@ -48,7 +48,8 @@ const NewReservation = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      row.attributes.villa.data.attributes.name +
+                      (row.attributes.villa.data !== null ? row.attributes.villa.data.attributes.name : row.attributes.room.data.attributes.name)
+                       +
                       ' - ' +
                       row.attributes.reservation_infos.data[0].attributes.name +
                       ' ' +

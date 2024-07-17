@@ -105,10 +105,10 @@ export default function ReservationSummarySection() {
 
                             <TableRow hover /*onClick={() => navigate('/villa/show/' + row.id + '/summary')}*/>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
-                                    Villa Adı
+                                    Tesis Adı
                                 </TableCell>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
-                                    :<b> {reservation.attributes.villa.data.attributes.name}</b>
+                                    :<b> {reservation.attributes.villa.data !== null ? reservation.attributes.villa.data.attributes.name : reservation.attributes.room.data.attributes.name}</b>
                                 </TableCell>
 
                                 <TableCell sx={{ pl: 3, cursor: 'pointer', backgroundColor: '#83D4A9' }} component="th" scope="row">
@@ -142,7 +142,7 @@ export default function ReservationSummarySection() {
                                     Bölge
                                 </TableCell>
                                 <TableCell sx={{ pl: 3, cursor: 'pointer' }} component="th" scope="row">
-                                    : <b>{reservation.attributes.villa.data.attributes.region}</b>
+                                    : <b>{reservation.attributes.villa.data !== null ? reservation.attributes.villa.data.attributes.region : reservation.attributes.room.data.attributes.apart.data.attributes.region }</b>
                                 </TableCell>
                             </TableRow>
 

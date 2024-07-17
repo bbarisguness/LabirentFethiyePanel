@@ -122,7 +122,7 @@ export default function ReservationPaymentSection() {
                 </Table>
             </TableContainer>
             <PaymentModalDelete selectedItem={selectedPaymentDeleteItem} setIsEdit={setIsEdit} id={Number(paymentDeleteId)} title={paymentDeleteId} open={paymentModalDelete} handleClose={handleClose} />
-            <ReservationPaymentsModal open={paymentModal} modalToggler={setPaymentModal} setIsEdit={setIsEdit} villaId={data.attributes.villa.data.id} />
+            <ReservationPaymentsModal open={paymentModal} modalToggler={setPaymentModal} setIsEdit={setIsEdit} facilityId={data.attributes.villa.data !== null ? data.attributes.villa.data.id : data.attributes.room.data.id} facilityType={data.attributes.villa.data !== null ? 1 : 2 } apartId={data.attributes.room?.data?.attributes.apart.data.id} />
             <ReservationPaymentsUpdateModal open={paymentUpdateModal} modalToggler={setPaymentUpdateModal} setIsEdit={setIsEdit} id={selectedId} />
         </MainCard>
     );

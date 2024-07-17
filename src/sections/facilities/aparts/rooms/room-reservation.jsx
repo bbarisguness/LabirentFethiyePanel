@@ -25,6 +25,7 @@ import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import ReservationModal from 'sections/reservations/ReservationModal';
 import { GetReservations } from 'services/roomServices';
+import ReservationApartModal from 'sections/reservations/ReservationApartModal';
 
 const fallbackData = [];
 function ReactTable({ data, columns, modalToggler, pagination, setPagination, setSorting, sorting, globalFilter, setGlobalFilter, showAllReservation, setShowAllReservation }) {
@@ -278,7 +279,7 @@ export default function RoomReservationSection() {
                 }}
             />
 
-            <ReservationModal setIsAdded={setIsAdded} open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
+            <ReservationApartModal setIsAdded={setIsAdded} open={reservationModal} modalToggler={setReservationModal} villaId={params.id} />
         </>
     );
 }

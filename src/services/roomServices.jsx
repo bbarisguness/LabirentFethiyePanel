@@ -101,4 +101,102 @@ const GetReservations = (page, size, sort = true, fieldName = 'id', filter, room
     }
 }
 
-export { GetRoom, GetRoomList, GetReservations, GetReservationListTop5, RoomChangeState,AddRoom }
+
+const RoomIsAvailible = (roomId, date1, date2) => {
+    const query = qs.stringify({
+        sort: ['checkIn:asc'],
+        fields: ['id'],
+        populate: {
+            room: {
+                fields: ['id', 'name']
+            }
+        },
+        filters: {
+            $and: [
+                {
+                    room: {
+                        id: {
+                            $eq: roomId
+                        }
+                    }
+                },
+                {
+                    reservationStatus: {
+                        $ne: 110
+                    }
+                },
+                {
+                    $or: [
+                        {
+                            $and: [
+                                { checkIn: { $gt: date1 } },
+                                { checkIn: { $lt: date2 } }
+                            ]
+                        },
+                        {
+                            $and: [
+                                { checkIn: { $lte: date1 } },
+                                { checkOut: { $gt: date1 } }
+                            ]
+                        },
+                        {
+                            $and: [
+                                { checkIn: { $lt: date2 } },
+                                { checkOut: { $gte: date2 } }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    })
+    return get(`/api/reservations?${query}`);
+}
+
+const RoomGetPriceForReservation = (roomId, date1, date2) => {
+    const query = qs.stringify({
+        sort: ['checkIn:asc'],
+        fields: ['checkIn', 'checkOut', 'price'],
+        populate: {
+            room: {
+                fields: ['id', 'name']
+            }
+        },
+        filters: {
+            $and: [
+                {
+                    room: {
+                        id: {
+                            $eq: roomId
+                        }
+                    }
+                },
+                {
+                    $or: [
+                        {
+                            $and: [
+                                { checkIn: { $gt: date1 } },
+                                { checkIn: { $lte: date2 } }
+                            ]
+                        },
+                        {
+                            $and: [
+                                { checkIn: { $lte: date1 } },
+                                { checkOut: { $gte: date1 } }
+                            ]
+                        },
+                        {
+                            $and: [
+                                { checkIn: { $lte: date2 } },
+                                { checkOut: { $gte: date2 } }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    });
+    return get(`/api/price-dates?${query}`);
+}
+
+export { GetRoom, GetRoomList, GetReservations, GetReservationListTop5, RoomChangeState, AddRoom, RoomIsAvailible, RoomGetPriceForReservation }

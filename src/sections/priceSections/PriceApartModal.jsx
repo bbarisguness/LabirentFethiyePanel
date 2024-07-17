@@ -6,10 +6,11 @@ import Modal from '@mui/material/Modal';
 // project imports
 import MainCard from 'components/MainCard';
 import SimpleBar from 'components/third-party/SimpleBar';
-import ReservationPaymentAddForm from './reservation-payments-add-form';
+import FormPriceAdd from './FormPriceAdd';
+import FormPriceApartAdd from './FormPriceApartAdd';
 
 
-export default function ReservationPaymentsModal({ open, modalToggler,  setIsEdit,facilityId,facilityType,apartId }) {
+export default function PriceApartModal({ open, modalToggler, roomId, setIsEdit }) {
 
     const closeModal = () => modalToggler(false);
 
@@ -29,7 +30,8 @@ export default function ReservationPaymentsModal({ open, modalToggler,  setIsEdi
                         content={false}
                     >
                         <SimpleBar sx={{ maxHeight: `calc(100vh - 48px)`, '& .simplebar-content': { display: 'flex', flexDirection: 'column' } }}>
-                            <ReservationPaymentAddForm closeModal={closeModal} setIsEdit={setIsEdit} facilityId={facilityId} facilityType={facilityType} apartId={apartId} />
+                            {/* <FormPriceAdd roomId={roomId} closeModal={closeModal} setIsEdit={setIsEdit} /> */}
+                            <FormPriceApartAdd roomId={roomId} closeModal={closeModal} setIsEdit={setIsEdit} />
                         </SimpleBar>
                     </MainCard>
                 </Modal>

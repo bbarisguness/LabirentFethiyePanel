@@ -27,7 +27,7 @@ const GetReservationsTop5 = (id) => {
 const GetReservation = (id) =>
     get(
         //`/api/reservations/${id}?populate[0]=payments&populate[1]=villa&populate[reservations][populate][reservation_infos][filters][owner]=true`
-        `/api/reservations/${id}?populate[0]=reservation_infos&populate[1]=reservation_items&populate[2]=villa&populate[3]=payments.payment_type`
+        `/api/reservations/${id}?populate[0]=reservation_infos&populate[1]=reservation_items&populate[2]=villa&populate[3]=payments.payment_type&populate[4]=room.apart`
 
     );
 
@@ -65,7 +65,7 @@ const UpdateReservation = (id, payload) =>
 const ReservationRemove = (id) => remove('/api/reservations/' + id)
 
 const GetNewReservations = () => {
-    return get(`/api/reservations?sort[0]=createdAt:desc&populate[0]=reservation_infos&populate[1]=villa&filters[$or][0][reservationStatus][$eq]=100`);
+    return get(`/api/reservations?sort[0]=createdAt:desc&populate[0]=reservation_infos&populate[1]=villa&populate[2]=room&filters[$or][0][reservationStatus][$eq]=100`);
 }
 
 const GetDailyReservationActions = () => {

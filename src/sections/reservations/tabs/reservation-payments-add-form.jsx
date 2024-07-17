@@ -28,12 +28,14 @@ const getInitialValues = () => {
         paymentType: '',
         payment_type: {},
         reservation: {},
-        villa: {}
+        villa: {},
+        room: {},
+        apart: {}
     };
     return newPriceDate;
 };
 
-export default function ReservationPaymentAddForm({ closeModal, setIsEdit, villaId }) {
+export default function ReservationPaymentAddForm({ closeModal, setIsEdit, facilityId, facilityType, apartId }) {
     const params = useParams();
     const [paymentType, setPaymentType] = useState();
     const validationSchema = Yup.object({
@@ -45,6 +47,8 @@ export default function ReservationPaymentAddForm({ closeModal, setIsEdit, villa
         GetAllPaymentTypes().then((res) => { setPaymentType(res.data); })
     }, []);
 
+    
+
     const formik = useFormik({
         initialValues: getInitialValues(),
         validationSchema: validationSchema,
@@ -54,7 +58,11 @@ export default function ReservationPaymentAddForm({ closeModal, setIsEdit, villa
 
                 values.reservation = { connect: [params.id] };
                 values.payment_type = { connect: [values.paymentType.toString()] };
-                values.villa = { connect: [villaId] };
+                if (facilityType === 1) values.villa = { connect: [facilityId] };
+                if (facilityType === 2) {
+                    values.room = { connect: [facilityId] };
+                    values.apart = { connect: [apartId] };
+                }
 
                 //console.log(values);
 
@@ -80,7 +88,7 @@ export default function ReservationPaymentAddForm({ closeModal, setIsEdit, villa
                     closeModal();
                 })
             } catch (error) {
-                 console.log("error => ", error);
+                console.log("error => ", error);
             }
         }
     });
