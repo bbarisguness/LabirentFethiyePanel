@@ -15,15 +15,16 @@ import { APP_DEFAULT_PATH } from 'config';
 
 // assets
 import { Profile, Calendar, DollarCircle, Image, Folder, ClipboardText, ArchiveTick } from 'iconsax-react';
-import { GetVilla, GetVillaName } from 'services/villaServices';
 import { Button, Grid } from '@mui/material';
+import { GetRoomName } from 'services/roomServices';
+import RoomUpdateModal from 'sections/facilities/aparts/RoomUpdateModal';
 
-// ==============================|| PROFILE - ACCOUNT ||============================== //
 
 export default function RoomShow() {
     const { pathname } = useLocation();
     const params = useParams();
     const navigate = useNavigate()
+    const [roomUpdateModal, setRoomUpdateModal] = useState(false)
 
     let selectedTab = 0;
     let breadcrumbTitle = '';
@@ -31,7 +32,17 @@ export default function RoomShow() {
 
     if (pathname.indexOf('summary') != -1) {
         selectedTab = 0;
-    } else if (pathname.indexOf('content') != -1) {
+    }
+    else if (pathname.indexOf('reservation') != -1) {
+        selectedTab = 1;
+    }
+    else if (pathname.indexOf('available-date') != -1) {
+        selectedTab = 2;
+    }
+    else if (pathname.indexOf('price') != -1) {
+        selectedTab = 3;
+    }
+    else if (pathname.indexOf('content') != -1) {
         selectedTab = 4;
     } else if (pathname.indexOf('gallery') != -1) {
         selectedTab = 5;
@@ -80,25 +91,25 @@ export default function RoomShow() {
     };
 
     let breadcrumbLinks = [
-        { title: 'Apart Yönetimi', to: '/facilities/aparts/apart-list' }
+        { title: 'Apart Yönetimi', to: '/facilities/aparts-list' }
     ];
     if (selectedTab === 0) {
-        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts/apart-list' }, { title: villa?.attributes.name, to: `/facilities/aparts/apart-show/summary/${params.id}` }, { title: 'Özet Bilgiler' }];
-    }    
+        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts-list' }, { title: villa?.attributes?.apart?.data?.attributes?.name, to: `/facilities/aparts/apart-show/summary/${villa?.attributes?.apart?.data?.id}` }, { title: villa?.attributes.name }, { title: 'Özet Bilgiler' }];
+    }
     else if (selectedTab === 1) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/aparts/apart-list' }, { title: villa?.attributes.name, to: `/facilities/aparts/room-show/reservation/${params.id}` }, { title: 'Rezervasyonlar' }];
+        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts-list' }, { title: villa?.attributes?.apart?.data?.attributes?.name, to: `/facilities/aparts/apart-show/summary/${villa?.attributes?.apart?.data?.id}` }, { title: villa?.attributes.name }, { title: 'Rezervasyonlar' }];
     }
     else if (selectedTab === 2) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/aparts/apart-list' }, { title: villa?.attributes.name, to: `/facilities/aparts/room-show/available-date/${params.id}` }, { title: 'Müsait Tarihler' }];
+        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts-list' }, { title: villa?.attributes?.apart?.data?.attributes?.name, to: `/facilities/aparts/apart-show/summary/${villa?.attributes?.apart?.data?.id}` }, { title: villa?.attributes.name }, { title: 'Müsait Tarihler' }];
     }
     else if (selectedTab === 3) {
-        breadcrumbLinks = [{ title: 'Villa Yönetimi', to: '/facilities/aparts/apart-list' }, { title: villa?.attributes.name, to: `/facilities/aparts/room-show/price/${params.id}` }, { title: 'Fiyatlar' }];
-    }    
+        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts-list' }, { title: villa?.attributes?.apart?.data?.attributes?.name, to: `/facilities/aparts/apart-show/summary/${villa?.attributes?.apart?.data?.id}` }, { title: villa?.attributes.name }, { title: 'Fiyatlar' }];
+    }
     else if (selectedTab === 5) {
-        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts/apart-list' }, { title: villa?.attributes.name, to: `/facilities/aparts/room-show/gallery/${params.id}` }, { title: 'Galeri' }];
+        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts-list' }, { title: villa?.attributes?.apart?.data?.attributes?.name, to: `/facilities/aparts/apart-show/summary/${villa?.attributes?.apart?.data?.id}` }, { title: villa?.attributes.name }, { title: 'Galeri' }];
     }
     else if (selectedTab === 6) {
-        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts/apart-list' }, { title: villa?.attributes.name, to: `/facilities/aparts/room-show/file/${params.id}` }, { title: 'Dosyalar' }];
+        breadcrumbLinks = [{ title: 'Apart Yönetimi', to: '/facilities/aparts-list' }, { title: villa?.attributes?.apart?.data?.attributes?.name, to: `/facilities/aparts/apart-show/summary/${villa?.attributes?.apart?.data?.id}` }, { title: villa?.attributes.name }, { title: 'Dosyalar' }];
     }
 
     useEffect(() => {
@@ -111,21 +122,26 @@ export default function RoomShow() {
 
     useEffect(() => {
         if (params.id > 1)
-            GetVillaName(params.id).then((res) => setVilla(res.data))
+            GetRoomName(params.id).then((res) => {
+                setVilla(res.data)
+            })
     }, [])
+
+
 
 
 
     return (
         <>
+            <RoomUpdateModal open={roomUpdateModal} modalToggler={setRoomUpdateModal} villaId={params.id} />
             <Breadcrumbs custom links={breadcrumbLinks} />
             <Grid style={{ marginBottom: '10px' }} container justifyContent="flex-end" alignItems="normal">
-                <Button onClick={() => navigate(`/facilities/aparts/apart-update/${params.id}`)} size='small' type="button" variant="contained">GÜNCELLE</Button>
+                <Button onClick={() => setRoomUpdateModal(true)} size='small' type="button" variant="contained">GÜNCELLE</Button>
             </Grid>
             <MainCard border={false}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
                     <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab">
-                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/aparts/room-show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />                       
+                        <Tab label="Özet Bilgiler" component={Link} to={`/facilities/aparts/room-show/summary/${params.id}`} icon={<Profile />} iconPosition="start" />
                         <Tab
                             label="Rezervasyonlar"
                             component={Link}
@@ -146,7 +162,7 @@ export default function RoomShow() {
                             to={`/facilities/aparts/room-show/price/${params.id}`}
                             icon={<DollarCircle />}
                             iconPosition="start"
-                        />                       
+                        />
                         <Tab label="Galeri" component={Link} to={`/facilities/aparts/room-show/gallery/${params.id}`} icon={<Image />} iconPosition="start" />
                         <Tab label="Dosyalar" component={Link} to={`/facilities/aparts/room-show/file/${params.id}`} icon={<Folder />} iconPosition="start" />
                     </Tabs>

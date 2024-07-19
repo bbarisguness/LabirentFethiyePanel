@@ -17,7 +17,6 @@ import { useState, useEffect } from 'react';
 
 import { openSnackbar } from 'api/snackbar';
 import Loader from 'components/Loader';
-import { GetReservationsTop5 } from 'services/reservationServices';
 import RoomAddModal from '../RoomAddModal';
 
 export default function ApartSummarySection() {

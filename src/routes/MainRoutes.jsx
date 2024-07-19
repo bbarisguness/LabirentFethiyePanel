@@ -39,6 +39,9 @@ import ApartGallery from 'pages/facilities/aparts/tabs/apart-gallery';
 import ApartFile from 'pages/facilities/aparts/tabs/apart-file';
 import RoomReservation from 'pages/facilities/aparts/rooms/tabs/room-reservation';
 import RoomPrice from 'pages/facilities/aparts/rooms/tabs/room-price';
+import RoomAvailableDate from 'pages/facilities/aparts/rooms/tabs/room-available-date';
+import RoomGallery from 'pages/facilities/aparts/rooms/tabs/room-gallery';
+import RoomFile from 'pages/facilities/aparts/rooms/tabs/room-file';
 
 
 const ErrorPage = Loadable(lazy(() => import('pages/error-pages/404')));
@@ -158,6 +161,18 @@ const MainRoutes = {
                 {
                   path: 'content/:id',
                   element: <ApartContent />
+                },
+                {
+                  path: 'available-date/:id',
+                  element: <RoomAvailableDate />
+                },
+                {
+                  path: 'gallery/:id',
+                  element: <RoomGallery />
+                },
+                {
+                  path: 'file/:id',
+                  element: <RoomFile />
                 }
               ]
             }

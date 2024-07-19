@@ -31,7 +31,7 @@ const getInitialValues = () => {
     return newDistanceRuler;
 };
 
-export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoading, apart = false }) {
+export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoading, apart = false, room = false }) {
     const params = useParams();
 
     const [uploadLoading, setUploadLoading] = useState(false);
@@ -64,7 +64,17 @@ export default function FormPhotoAdd({ closeModal, setIsEdit, lastLine, setLoadi
                                     apart: { connect: [params.id] }
                                 }
                             };
-                        } else {
+                        } else if (room) {
+                            imgJson = {
+                                data: {
+                                    name: img.name,
+                                    line: (lastLine && lastLine + (index + 1)) || (index + 1),
+                                    photo: img.id,
+                                    room: { connect: [params.id] }
+                                }
+                            };
+                        }
+                        else {
                             imgJson = {
                                 data: {
                                     name: img.name,

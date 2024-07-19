@@ -5,6 +5,7 @@ import * as qs from 'qs'
 const GetRoom = (id) => get(`/api/rooms/${id}?populate[photos][sort]=line:asc&populate[photos][populate][0]=photo&populate[reservations][populate][reservation_infos][filters][owner][$eq]=true&populate[reservations][sort][0]=createdAt:desc`)
 const AddRoom = (payload) => post(`/api/rooms`, payload, true);
 
+const GetRoomName = (id) => get(`/api/rooms/${id}?fields=name&populate[apart][fields][0]=name&populate[apart][fields][1]=id`)
 
 const GetRoomList = (apartId) => {
     const query = qs.stringify({
@@ -30,7 +31,7 @@ const GetRoomList = (apartId) => {
 const GetReservationListTop5 = (roomId) => {
     const query = qs.stringify({
         populate: ['reservation_infos'],
-        //sort: ['checkIn:asc'],
+        sort: ['checkIn:asc'],
         //fields: ['id'],
         // populate: {
         //     villa: {
@@ -38,10 +39,13 @@ const GetReservationListTop5 = (roomId) => {
         //     }
         // },
         filters: {
-            apart: {
+            room: {
                 id: {
                     $eq: roomId
                 }
+            },
+            homeOwner: {
+                $eq: false
             }
         }
     })
@@ -74,6 +78,9 @@ const GetReservations = (page, size, sort = true, fieldName = 'id', filter, room
                     id: {
                         $eq: roomId
                     }
+                },
+                homeOwner: {
+                    $eq: false
                 }
             }
         })
@@ -97,7 +104,7 @@ const GetReservations = (page, size, sort = true, fieldName = 'id', filter, room
         //             }
         //         })
         // return get(`/api/reservations?${query}`);
-        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][room][id][$eq]=${id}`);
+        return get(`/api/reservations?sort=${fieldName}:${sort ? 'desc' : 'asc'}&pagination[page]=${page}&pagination[pageSize]=${size}&populate[reservation_infos][fields][0]=name&populate[reservation_infos][fields][1]=surname&filters[$and][0][room][id][$eq]=${roomId}`);
     }
 }
 
@@ -199,4 +206,4 @@ const RoomGetPriceForReservation = (roomId, date1, date2) => {
     return get(`/api/price-dates?${query}`);
 }
 
-export { GetRoom, GetRoomList, GetReservations, GetReservationListTop5, RoomChangeState, AddRoom, RoomIsAvailible, RoomGetPriceForReservation }
+export { GetRoom, GetRoomList, GetReservations, GetReservationListTop5, RoomChangeState, AddRoom, RoomIsAvailible, RoomGetPriceForReservation, GetRoomName }

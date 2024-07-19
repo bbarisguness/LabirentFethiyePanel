@@ -10,6 +10,7 @@ const ApartChangeState = (id, payload) => put(`/api/aparts/${id}`, payload, true
 
 const CreateApart = (payload) => post(`/api/aparts`, payload, true);
 
+const GetApartName = (id) => get(`/api/aparts/${id}?fields=name`)
 
 
 const GetApartFull = (id) => {
@@ -148,4 +149,4 @@ const GetApartFull = (id) => {
 
 
 // export { Villas, GetVillaName, GetVilla, VillaAdd, VillaRemove, VillaIsAvailible, VillaGetPriceForReservation, GetVillaFull, VillaChangeState, GetVillaDetail, VillaUpdate }
-export { Aparts, GetApart, ApartChangeState, GetApartFull, CreateApart }
+export { Aparts, GetApart, ApartChangeState, GetApartFull, CreateApart,GetApartName }

@@ -55,7 +55,14 @@ const GetAvailibleDate = (villaId) => {
     return get(`/api/reservations?filters[$or][0][checkOut][$gte]=${year}-${month}-${day}&filters[$or][1][checkIn][$eq]=${year}-${month}-${day}&filters[reservationStatus][$ne]=110&filters[villa][id][$eq]=${villaId}&sort[0]=checkIn:asc&fields[0]=checkIn&fields[1]=checkOut&pagination[pageSize]=100&pagination[page]=1`)
 }
 
+const GetAvailibleDateRoom = (roomId) => {
+    let newDate = new Date();
+    let year = newDate.getFullYear();
+    let month = newDate.getMonth().toString().length === 1 ? '0' + (newDate.getMonth() + 1).toString() : (newDate.getMonth() + 1).toString();
+    let day = newDate.getDate().toString().length === 1 ? '0' + newDate.getDate().toString() : newDate.getDate().toString();
 
+    return get(`/api/reservations?filters[$or][0][checkOut][$gte]=${year}-${month}-${day}&filters[$or][1][checkIn][$eq]=${year}-${month}-${day}&filters[reservationStatus][$ne]=110&filters[room][id][$eq]=${roomId}&sort[0]=checkIn:asc&fields[0]=checkIn&fields[1]=checkOut&pagination[pageSize]=100&pagination[page]=1`)
+}
 
 const UpdateReservation = (id, payload) =>
     put(
@@ -85,4 +92,4 @@ const GetDailyReservationActions = () => {
 }
 
 
-export { GetReservations, GetReservation, AddReservation, AddReservationItem, GetAvailibleDate, GetReservationsTop5, GetAllReservations, UpdateReservation, ReservationRemove, GetNewReservations,GetDailyReservationActions }
+export { GetReservations, GetReservation, AddReservation, AddReservationItem, GetAvailibleDate, GetReservationsTop5, GetAllReservations, UpdateReservation, ReservationRemove, GetNewReservations, GetDailyReservationActions, GetAvailibleDateRoom }

@@ -6,10 +6,11 @@ import Modal from '@mui/material/Modal';
 // project imports
 import MainCard from 'components/MainCard';
 import SimpleBar from 'components/third-party/SimpleBar';
-import FormPhotoAdd from './FormPhotoAdd';
+import FormRoomUpdate from './FormRoomUpdate';
 
 
-export default function PhotoModal({ open, modalToggler, villaId, setIsEdit, lastLine, setLoading, apart, room }) {
+
+export default function RoomUpdateModal({ open, modalToggler, villaId }) {
 
     const closeModal = () => modalToggler(false);
 
@@ -29,7 +30,7 @@ export default function PhotoModal({ open, modalToggler, villaId, setIsEdit, las
                         content={false}
                     >
                         <SimpleBar sx={{ maxHeight: `calc(100vh - 48px)`, '& .simplebar-content': { display: 'flex', flexDirection: 'column' } }}>
-                            <FormPhotoAdd apart={apart} room={room} villaId={villaId} closeModal={closeModal} setIsEdit={setIsEdit} lastLine={lastLine} setLoading={setLoading} />
+                            <FormRoomUpdate villaId={villaId} closeModal={closeModal} />
                         </SimpleBar>
                     </MainCard>
                 </Modal>
