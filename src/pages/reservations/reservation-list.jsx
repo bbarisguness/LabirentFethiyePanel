@@ -221,7 +221,7 @@ export default function ReservationList() {
                 }
             },
             {
-                header: 'Villa Adı',
+                header: 'Tesis Adı',
                 cell: ({ row }) => (
                     <Stack direction="row" spacing={1.5} alignItems="center">
                         <Avatar
@@ -230,7 +230,7 @@ export default function ReservationList() {
                             src={getImageUrl(`avatar-${!row.original.avatar ? 1 : row.original.avatar}.png`, ImagePath.USERS)}
                         />
                         <Stack spacing={0}>
-                            <Typography variant="subtitle1">{row?.original?.attributes?.villa?.data?.attributes?.name}</Typography>
+                            <Typography variant="subtitle1">{row?.original?.attributes?.villa?.data !== null ? row?.original?.attributes?.villa?.data?.attributes?.name : row?.original?.attributes?.room?.data?.attributes?.name}</Typography>
                         </Stack>
                     </Stack>
                 )
